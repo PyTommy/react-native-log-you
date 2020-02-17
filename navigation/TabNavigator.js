@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
 import LogStackNavigator from './LogStackNavigator';
-import StopWatchScreen from '../screens/StopWatchScreen';
+import StopwatchScreen from '../screens/StopwatchScreen';
 import SettingScreen from '../screens/SettingScreen';
 
 const Tab = createBottomTabNavigator();
@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 const DefaultTabBarIcon = ({ focused }, route) => {
     let iconName;
 
-    if (route.name === 'StopWatch') {
+    if (route.name === 'Stopwatch') {
         iconName = 'ios-time'
     } else if (route.name === 'Log') {
         iconName = 'ios-paper'
@@ -42,8 +42,8 @@ const TabNavigator = () => {
             }}
         >
             <Tab.Screen
-                name="StopWatch"
-                component={StopWatchScreen}
+                name="Stopwatch"
+                component={StopwatchScreen}
                 options={{ cardStyle: { backgroundColor: 'blue' } }} />
             <Tab.Screen
                 name="Log"

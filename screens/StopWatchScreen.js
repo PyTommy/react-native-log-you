@@ -4,10 +4,10 @@ import { Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
 import DefaultText from '../components/UI/DefaultText';
 import BoldText from '../components/UI/BoldText';
 
-const StopWatchScreen = props => {
+const StopwatchScreen = props => {
     return (
         <SafeAreaView style={styles.screen}>
-            <DefaultText>StopWatchScreen</DefaultText>
+            <DefaultText>StopwatchScreen</DefaultText>
         </SafeAreaView>
     )
 }
@@ -19,4 +19,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default StopWatchScreen
+export default StopwatchScreen
