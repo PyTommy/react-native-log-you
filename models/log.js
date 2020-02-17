@@ -1,3 +1,5 @@
+import { timeDiffInSecond } from '../utils/timeDiff'
+
 /**
  * Convert a date object to the beginning of the day's if it indicates after 4am, otherwise begging of the yesterday's.  ex) 2000/01/01 22:00 => 2020/01/01 00:00, 2000/01/01 03:59 => 1999/12/31 00:00.   
  * @param {date} startAt 
@@ -23,21 +25,6 @@ export const dateGenerator = (startAt) => {
         );
     }
     return date;
-};
-
-/**
- * Calculate time difference in seconds
- * @function timeCalculator
- * @param {date} time1 
- * @param {date} time2 
- * @returns {number}
- */
-export const calcTimeDiff = (time1, time2) => {
-    if (time1 <= time2) {
-        return Math.floor((time2 - time1) / 1000);
-    } else {
-        return Math.floor((time1 - time2) / 1000);
-    }
 };
 
 /**
@@ -72,6 +59,6 @@ export default class Log {
             this.startAt = startAt,
             this.stopAt = stopAt,
             this.date = date ? date : dateGenerator(startAt),
-            this.time = time ? time : calcTimeDiff(startAt, stopAt)
+            this.time = time ? time : timeDiffInSecond(startAt, stopAt)
     }
 }

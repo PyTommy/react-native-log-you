@@ -1,4 +1,4 @@
-import Log, { dateGenerator, calcTimeDiff } from './log';
+import Log, { dateGenerator } from './log';
 
 describe('dateGenerator', () => {
     test("return today's date", () => {
@@ -10,16 +10,6 @@ describe('dateGenerator', () => {
         const date = new Date(2000, 0, 1, 3, 1, 1, 1); // 2000/01/01 03:01
         const generatedDate = dateGenerator(date);
         expect(generatedDate).toEqual(new Date(1999, 11, 31, 0, 0, 0, 0)); // 1999/12/31 00:00:00:000
-    });
-});
-
-describe('calcTimeDiff', () => {
-    test('returns time difference in seconds', () => {
-        const date1 = new Date(2000, 0, 1); // 2000/01/01
-        const date2 = new Date(2000, 0, 2); //2000/01/02
-        const secondsInDay = 24 * 60 * 60;
-        const timeDiff = calcTimeDiff(date1, date2);
-        expect(timeDiff).toBe(secondsInDay);
     });
 });
 
