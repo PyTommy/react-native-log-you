@@ -1,3 +1,7 @@
+/**
+ * Convert a date object to the beginning of the day's if it indicates after 4am, otherwise begging of the yesterday's.  ex) 2000/01/01 22:00 => 2020/01/01 00:00, 2000/01/01 03:59 => 1999/12/31 00:00.   
+ * @param {date} startAt 
+ */
 export const dateGenerator = (startAt) => {
     let date;
     const h = startAt.getHours();
