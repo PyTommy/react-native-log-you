@@ -3,6 +3,11 @@ import { StyleSheet, Text, View } from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 
+import AppNavigator from './navigation/AppNavigator';
+import DefaultText from './components/UI/DefaultText';
+import BoldText from './components/UI/BoldText';
+import Colors from './constants/Colors';
+
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
 
@@ -23,18 +28,14 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text>Normal Text</Text>
-      <Text style={{ fontFamily: 'roboto' }}>Roboto</Text>
-      <Text style={{ fontFamily: 'roboto-bold' }}>Roboto Bold</Text>
-    </View>
+    <AppNavigator />
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#202020',
     alignItems: 'center',
     justifyContent: 'center',
   },
