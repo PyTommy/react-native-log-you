@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import Colors from '../constants/Colors';
+import LogStackNavigator from './LogStackNavigator';
 import StopWatchScreen from '../screens/StopWatchScreen';
-import DayLogScreen from '../screens/DayLogScreen';
 import SettingScreen from '../screens/SettingScreen';
 
 const Tab = createBottomTabNavigator();
@@ -47,7 +47,7 @@ const TabNavigator = () => {
                 options={{ cardStyle: { backgroundColor: 'blue' } }} />
             <Tab.Screen
                 name="Log"
-                component={DayLogScreen} />
+                component={LogStackNavigator} />
             <Tab.Screen
                 name="Setting"
                 component={SettingScreen} />
