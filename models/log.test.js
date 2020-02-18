@@ -19,19 +19,19 @@ describe('class Log', () => {
     const startAt = new Date();
     const stopAt = new Date();
     const date = new Date();
-    const time = 60;
+    const elapsedTime = 60;
 
     describe('Create class Log', () => {
         test('Create class Log', () => {
-            const log = new Log(id, title, startAt, stopAt, date, time);
+            const log = new Log(id, title, startAt, stopAt, date, elapsedTime);
             expect(!!log).toBe(true);
-            expect(log).toEqual({ id, title, startAt, stopAt, date, time });
+            expect(log).toEqual({ id, title, startAt, stopAt, date, elapsedTime });
         });
-        test('Create class Log with undefined date and time', () => {
+        test('Create class Log with undefined date and elapsedTime', () => {
             const log = new Log(id, title, startAt, stopAt);
             expect(!!log).toBe(true);
         });
-        test('Create class Log when date and time are null', () => {
+        test('Create class Log when date and elapsedTime are null', () => {
             const log = new Log(id, title, startAt, stopAt, null, null);
             expect(!!log).toBe(true);
         });
