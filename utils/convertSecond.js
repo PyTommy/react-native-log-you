@@ -3,7 +3,7 @@
  * @param {number} second
  * @returns {array} - [hour, minutes, seconds]
  */
-export const secondToNumberHMS = (second) => {
+export const secondToNumberHMSArray = (second) => {
     if (typeof second !== 'number') {
         throw new Error('Param should be a number');
     }
@@ -20,7 +20,7 @@ export const secondToNumberHMS = (second) => {
  * @param {number} length - Length of the result string
  * @returns {string}
  */
-const add0 = (num, length) => {
+export const add0 = (num, length) => {
     const numStr = num.toString();
     const diff = length - numStr.length;
     if (diff > 0) {
@@ -34,10 +34,7 @@ const add0 = (num, length) => {
  * @param {number} second 
  * @returns {array}
  */
-export const secondToStringHHMMSS = second => {
-    const hour = Math.floor(second / 3600);
-    const min = Math.floor((second - 3600 * hour) / 60);
-    const sec = Math.floor(second - 3600 * hour - 60 * min);
-
-    return [add0(hour, 2), add0(min, 2), add0(sec, 2)];
+export const secondToStringHHMMSSArray = second => {
+    const hmsArray = secondToNumberHMSArray(second);
+    return hmsArray.map((num) => add0(num, 2));
 };
