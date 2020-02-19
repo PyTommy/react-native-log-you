@@ -7,6 +7,13 @@ export const actionTypes = {
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
 };
 
-export const createLog = () => {
+export const createLog = (title, startAt, stopAt) => {
+    const newLog = new Log('1', title, startAt, stopAt);
 
+    return dispatch => {
+        dispatch({
+            type: actionTypes.CREATE_LOG,
+            payload: newLog,
+        })
+    }
 };
