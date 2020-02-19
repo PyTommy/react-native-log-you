@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
+import { Provider } from 'react-redux';
 
+import store from './store/configStore';
 import AppNavigator from './navigation/AppNavigator';
-import DefaultText from './components/UI/DefaultText';
-import BoldText from './components/UI/BoldText';
-import Colors from './constants/Colors';
+
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -28,7 +28,9 @@ export default function App() {
   }
 
   return (
-    <AppNavigator />
+    <Provider store={store}>
+      <AppNavigator />
+    </Provider>
   );
 }
 

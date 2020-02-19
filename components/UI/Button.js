@@ -14,6 +14,7 @@ import Colors from '../../constants/Colors';
  * Properties for style 
  * @property {object} style - style for the box.
  * @property {object} textStyle - style for the text.
+ * @property {boolean} bold - font weight 
  * @property {string} color - background color 
  * @property {number} height - height of the box
  * @property {number} width - width of the box
@@ -41,7 +42,7 @@ const Button = (props) => {
     }
     return (
         <TouchableOpacity onPress={props.onPress} style={boxStyle}>
-            {props.fontWeight === 'bold'
+            {props.bold
                 ? <BoldText style={textStyle}>{props.title}</BoldText>
                 : <DefaultText style={textStyle}>{props.title}</DefaultText>
             }
