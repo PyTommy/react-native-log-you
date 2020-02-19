@@ -1,6 +1,7 @@
 export default {
-    primary: '#00C6FF',
-    accent: '#FF4C8F',
+    primary: 'rgb(255,140,0)',
+    success: 'rgb(92, 184, 92)',
+    danger: 'rgb(217, 83, 79)',
     d1: '#121212',
     d2: '#222',
     d3: '#333',
@@ -8,4 +9,8 @@ export default {
     l1: 'rgba(255, 255, 255, 0.87)',
     l2: 'rgba(255, 255, 255, 0.6)',
     l3: 'rgba(255, 255, 255, 0.35)',
+    Study: 'rgba(78,255,96, 0.8)',
+    Eating: 'rgba(237, 255, 78, 0.75)',
+    Meditation: 'rgba(101, 157, 247, 0.75)',
+    Sports: 'rgba(255,185,78, 0.75)',
 };
