@@ -1,32 +1,27 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { View, Button, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
+import React, { useState } from 'react'
+import { View, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux';
 
 import useStopwatch from '../hooks/useStopwatch';
 import { secondToStringHHMMSSArray } from '../utils/convertSecond';
-import DefaultText from '../components/UI/DefaultText';
 import BoldText from '../components/UI/BoldText';
 import UIButton from '../components/UI/Button';
 import StartButton from '../components/StartButton';
 import Colors from '../constants/Colors';
+import { createLog } from '../store/actions/logAction';
+import { dateGenerator } from '../utils/dateGenerator';
 
 const StopwatchScreen = props => {
     const stopwatch = useStopwatch();
     const [curActiveTitle, setCurActiveTitle] = useState(null);
+    const [waitingSavedTime, setWaitingSavedTime] = useState({}); // used to add elapsedTime for an item while waiting async action creating new log on SQLite and redux store. (Example: { Study : 3600 })
+    const logStore = useSelector(state => state.log);
+    const dispatch = useDispatch();
 
-    const [itemSummaries, setItemSummaries] = useState({
-        Study: {
-            elapsedTime: 3600,
-        },
-        Meditation: {
-            elapsedTime: 3599,
-        },
-        Sports: {
-            elapsedTime: 3599,
-        },
-        Eating: {
-            elapsedTime: 3599,
-        },
-    });
+    const todayISOString = dateGenerator(new Date()).toISOString();
+    const itemElapsedTimes = logStore[todayISOString]
+        ? logStore[todayISOString].elapsedTimeSummary
+        : { Study: 0, Meditation: 0, Sports: 0, Eating: 0 };
 
     const resetStopwatchHandler = () => {
         setCurActiveTitle(() => null);
@@ -34,16 +29,11 @@ const StopwatchScreen = props => {
     }
 
     const saveLogHandler = async () => {
-        const title = curActiveTitle;
-        const elapsedTime = stopwatch.elapsedTime;
-        const startAt = stopwatch.startAt
-        setItemSummaries(prevState => ({
-            ...prevState,
-            [title]: {
-                ...prevState[title],
-                elapsedTime: prevState[title].elapsedTime + elapsedTime
-            }
+        setWaitingSavedTime(() => ({
+            [curActiveTitle]: stopwatch.elapsedTime
         }));
+        await dispatch(createLog(curActiveTitle, stopwatch.startAt, new Date()));
+        setWaitingSavedTime(() => ({}));
     }
 
     const saveAndResetStopwatch = () => {
@@ -60,21 +50,22 @@ const StopwatchScreen = props => {
         stopwatch.start(); // This reset and start stopwatch.
     };
 
-    const itemTitles = Object.keys(itemSummaries).sort();
-
+    const itemTitles = Object.keys(itemElapsedTimes).sort();
     const startButtons = itemTitles.map(itemTitle => {
         const isItemActive = curActiveTitle === itemTitle;
-        const savedItemElapsedTime = itemSummaries[itemTitle].elapsedTime;
+
+        let elapsedTime = itemElapsedTimes[itemTitle];
+        if (isItemActive) {
+            elapsedTime += stopwatch.elapsedTime;
+        }
+        elapsedTime += waitingSavedTime[itemTitle] || 0;
 
         return (
             <StartButton
                 key={itemTitle}
                 title={itemTitle}
                 onPress={() => startStopwatchHandler(itemTitle)}
-                elapsedTime={isItemActive
-                    ? savedItemElapsedTime + stopwatch.elapsedTime
-                    : savedItemElapsedTime
-                }
+                elapsedTime={elapsedTime}
                 active={isItemActive}
             />
         );

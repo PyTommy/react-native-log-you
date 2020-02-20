@@ -1,16 +1,13 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 
-import { secondToNumberHMSArray } from '../utils/convertSecond';
+import { secondToStringHHMMSSArray } from '../utils/convertSecond';
 import Colors from '../constants/Colors';
-import DefaultText from './UI/DefaultText';
 import BoldText from './UI/BoldText';
 
 const StartButton = props => {
-    const hmsArray = secondToNumberHMSArray(props.elapsedTime);
-    const hour = hmsArray[0];
-    const min = hmsArray[1];
-    const timeString = `${hour}hr ${min}min`;
+    const [hour, min, sec] = secondToStringHHMMSSArray(props.elapsedTime);
+    const timeString = `${hour}:${min}:${sec}`;
 
     const activeColor = Colors[props.title];
 

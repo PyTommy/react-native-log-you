@@ -5,8 +5,17 @@ import * as Font from 'expo-font';
 import { Provider } from 'react-redux';
 
 import store from './store/configStore';
+import * as db from './db/db';
 import AppNavigator from './navigation/AppNavigator';
 
+db.init()
+  .then(() => {
+    console.log('Initialized database');
+  })
+  .catch(err => {
+    console.log('Initializing db failed.');
+    console.log(err);
+  });
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
