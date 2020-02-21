@@ -19,7 +19,6 @@ const StopwatchScreen = props => {
     const dispatch = useDispatch();
 
     const todayISOString = dateGenerator(new Date()).toISOString();
-
     useEffect(() => {
         dispatch(fetchSummaries(todayISOString));
     }, []);

@@ -11,7 +11,7 @@ export const init = () => {
                 `CREATE TABLE IF NOT EXISTS logs (
                     id INTEGER PRIMARY KEY NOT NULL, 
                     title TEXT NOT NULL, 
-                    date TEXT NOT NULL,
+                    isoDate TEXT NOT NULL,
                     startAt TEXT NOT NULL,
                     stopAt TEXT NOT NULL,
                     elapsedTime INT NOT NULL 
@@ -28,19 +28,19 @@ export const init = () => {
     })
 };
 
-export const insertLog = (title, date, startAt, stopAt, elapsedTime) => {
+export const insertLog = (title, isoDate, startAt, stopAt, elapsedTime) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
                 `INSERT INTO logs(
                     title,
-                    date,
+                    isoDate,
                     startAt, 
                     stopAt,
                     elapsedTime
                 ) VALUES (?, ?, ?, ?, ?);
                 `,
-                [title, date, startAt, stopAt, elapsedTime],
+                [title, isoDate, startAt, stopAt, elapsedTime],
                 (_, result) => {
                     resolve(result);
                 },
@@ -54,8 +54,8 @@ export const insertLog = (title, date, startAt, stopAt, elapsedTime) => {
 
 /**
  * Returns promise that fetch summaries from database 
- * @param {string} dateFrom - ISO formatted date  
- * @param {string} dateTo - ISO formatted date
+ * @param {string} isoDateFrom - ISO formatted date  
+ * @param {string} isoDateTo - ISO formatted date
  * @returns {object}
  * Formatted as 
  * {
@@ -64,18 +64,18 @@ export const insertLog = (title, date, startAt, stopAt, elapsedTime) => {
  *  }
  * }
  */
-export const fetchSummaries = (dateFrom, dateTo) => {
+export const fetchSummaries = (isoDateFrom, isoDateTo) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
                 `
-                    SELECT date, title, SUM(elapsedTime) AS elapsedTime FROM logs
-                    WHERE date >= ? AND date <= ?
-                    GROUP BY date, title
+                    SELECT isoDate, title, SUM(elapsedTime) AS elapsedTime FROM logs
+                    WHERE isoDate >= ? AND isoDate <= ?
+                    GROUP BY isoDate, title
                 `,
-                [dateFrom, dateTo],
+                [isoDateFrom, isoDateTo],
                 (_, result) => {
-                    const isoDates = isoDatesBetween(dateFrom, dateTo);
+                    const isoDates = isoDatesBetween(isoDateFrom, isoDateTo);
 
                     // set initial summaries
                     const summaries = {};
@@ -90,12 +90,12 @@ export const fetchSummaries = (dateFrom, dateTo) => {
 
                     const itemSums = result.rows._array; // itemSums = [{title, elapsedTime, date}]
                     itemSums.forEach((itemSum) => {
-                        const date = itemSum.date;
+                        const isoDate = itemSum.isoDate;
                         const title = itemSum.title;
                         const elapsedTime = itemSum.elapsedTime;
-                        summaries[date] = {
-                            ...summaries[date],
-                            [title]: summaries[date][title] + elapsedTime
+                        summaries[isoDate] = {
+                            ...summaries[isoDate],
+                            [title]: summaries[isoDate][title] + elapsedTime
                         };
                     });
 
@@ -108,3 +108,63 @@ export const fetchSummaries = (dateFrom, dateTo) => {
         });
     })
 }
+
+/**
+ * Fetch logs created specified period from SQL database
+ * @param {string} isoDateFrom
+ * @param {string} isoDateTo 
+ */
+export const fetchLogs = (isoDateFrom, isoDateTo) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `
+                    SELECT * FROM logs
+                    WHERE isoDate >= ? AND isoDate <= ?
+                    ORDER BY startAt
+                `,
+                [isoDateFrom, isoDateTo],
+                (_, result) => {
+
+                    const isoDates = isoDatesBetween(isoDateFrom, isoDateTo);
+
+                    // set initial logs 
+                    const logs = {};
+                    isoDates.forEach(isoDate => {
+                        logs[isoDate] = [];
+                    });
+
+                    const fetchedLogs = result.rows._array; // itemSums = [{logs}]
+                    fetchedLogs.forEach((fetchedLog) => {
+                        fetchedLog.startAt = new Date(fetchedLog.startAt);
+                        fetchedLog.stopAt = new Date(fetchedLog.stopAt);
+                        logs[fetchedLog.isoDate].push(fetchedLog);
+                    });
+
+                    resolve(logs);
+                },
+                (_, err) => {
+                    reject(err);
+                }
+            );
+        });
+    })
+};
+
+export const deleteAllLogs = () => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `DROP TABLE logs`,
+                [],
+                (_, result) => {
+                    console.log(result);
+                    resolve();
+                },
+                (_, err) => {
+                    reject(err);
+                }
+            );
+        });
+    })
+};

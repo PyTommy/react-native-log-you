@@ -5,11 +5,10 @@ const summaryReducer = (state = {}, actions) => {
 
     switch (type) {
         case actionTypes.INCREMENT_TIME_SUMMARY:
-            const newLogDateISO = payload.date.toISOString();
-            if (!state[newLogDateISO]) {
+            if (!state[payload.isoDate]) {
                 return {
                     ...state,
-                    [newLogDateISO]: {
+                    [payload.isoDate]: {
                         Study: 0,
                         Meditation: 0,
                         Eating: 0,
@@ -20,9 +19,9 @@ const summaryReducer = (state = {}, actions) => {
             }
             return {
                 ...state,
-                [newLogDateISO]: {
-                    ...state[newLogDateISO],
-                    [payload.title]: state[newLogDateISO][payload.title] + payload.elapsedTime,
+                [payload.isoDate]: {
+                    ...state[payload.isoDate],
+                    [payload.title]: state[payload.isoDate][payload.title] + payload.elapsedTime,
                 }
             }
         case actionTypes.SET_SUMMARIES:

@@ -4,7 +4,7 @@ import * as db from '../../db/db';
 export const actionTypes = {
     INCREMENT_TIME_SUMMARY: 'INCREMENT_TIME_SUMMARY',
     SET_SUMMARIES: 'SET_SUMMARIES',
-    FETCH_LOG: 'FETCH_LOG',
+    FETCH_LOGS: 'FETCH_LOGS',
     DELETE_LOG: 'DELETE_LOG',
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
 };
@@ -15,7 +15,7 @@ export const createLog = (title, startAt, stopAt) => {
         try {
             const dbResult = await db.insertLog(
                 newLog.title,
-                newLog.date.toISOString(),
+                newLog.isoDate,
                 newLog.startAt.toISOString(),
                 newLog.stopAt.toISOString(),
                 newLog.elapsedTime
@@ -34,14 +34,30 @@ export const createLog = (title, startAt, stopAt) => {
     }
 };
 
-export const fetchSummaries = (dateFrom, dateTo) => {
-    if (!dateTo) dateTo = dateFrom;
+export const fetchSummaries = (isoDateFrom, isoDateTo) => {
+    if (!isoDateTo) isoDateTo = isoDateFrom;
     return async dispatch => {
         try {
-            const objectSummaries = await db.fetchSummaries(dateFrom, dateTo);
+            const objectSummaries = await db.fetchSummaries(isoDateFrom, isoDateTo);
             dispatch({
                 type: actionTypes.SET_SUMMARIES,
                 payload: objectSummaries
+            })
+        } catch (err) {
+            console.log(err);
+        }
+    };
+}
+
+export const fetchLogs = (isoDateFrom, isoDateTo) => {
+    if (!isoDateTo) isoDateTo = isoDateFrom;
+    return async dispatch => {
+        try {
+            const objectLogs = await db.fetchLogs(isoDateFrom, isoDateTo);
+            console.log(objectLogs);
+            dispatch({
+                type: actionTypes.FETCH_LOGS,
+                payload: objectLogs
             })
 
         } catch (err) {
@@ -49,3 +65,13 @@ export const fetchSummaries = (dateFrom, dateTo) => {
         }
     };
 }
+
+export const deleteAllLogs = () => {
+    return async dispatch => {
+        try {
+            await db.deleteAllLogs();
+        } catch (err) {
+            console.log(err);
+        }
+    }
+};
