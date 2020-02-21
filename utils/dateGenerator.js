@@ -24,3 +24,40 @@ export const dateGenerator = (startAt) => {
     }
     return date;
 };
+
+/**
+ * 
+ * @param {string|date|null|undefined} dateFrom - ISO or date object. Current date is applied if not provided.
+ * @param {string|date|null|undefined} dateTo - ISO or date object. dateFrom is applied if not provided.
+ * @returns {array} - ['ISODate']
+ */
+export const isoDatesBetween = (dateFrom, dateTo) => {
+    if (!dateFrom) {
+        const now = new Date();
+        const today = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate()
+        );
+        dateFrom = today;
+    }
+    if (typeof dateFrom === 'string') {
+        dateFrom = new Date(dateFrom);
+    }
+    if (!dateTo) {
+        dateTo = dateFrom;
+    }
+    if (typeof dateTo === 'string') {
+        dateTo = new Date(dateTo);
+    }
+
+    const dates = [];
+    let tmpDate = dateFrom;
+
+    while (tmpDate <= dateTo) {
+        dates.push(tmpDate.toISOString());
+        tmpDate = new Date(tmpDate.getTime() + 24 * 60 * 60 * 1000);
+    }
+
+    return dates;
+};
