@@ -1,36 +1,9 @@
-import { actionTypes } from '../actions/logAction';
+import { actionTypes } from '../actions';
 
 const logReducer = (state = {}, actions) => {
     const { type, payload } = actions;
 
-    switch (actions.type) {
-        case actionTypes.CREATE_LOG:
-            const newLogDateISO = payload.date.toISOString();
-            if (!state[newLogDateISO]) {
-                return {
-                    ...state,
-                    [newLogDateISO]: {
-                        elapsedTimeSummary: {
-                            Study: 0,
-                            Meditation: 0,
-                            Eating: 0,
-                            Sports: 0,
-                            [payload.title]: payload.elapsedTime
-                        },
-                        logs: [payload]
-                    }
-                }
-            }
-            return {
-                ...state,
-                [newLogDateISO]: {
-                    elapsedTimeSummary: {
-                        ...state[newLogDateISO].elapsedTimeSummary,
-                        [payload.title]: state[newLogDateISO].elapsedTimeSummary[payload.title] + payload.elapsedTime
-                    },
-                    logs: [...state[newLogDateISO].logs, payload]
-                }
-            }
+    switch (type) {
         default:
             return state;
     }

@@ -26,7 +26,6 @@ export const init = () => {
     })
 };
 
-
 export const insertLog = (title, date, startAt, stopAt, elapsedTime) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {

@@ -2,7 +2,7 @@ import Log from '../../models/log';
 import * as db from '../../db/db';
 
 export const actionTypes = {
-    CREATE_LOG: 'CREATE_LOG',
+    INCREMENT_TIME_SUMMARY: 'INCREMENT_TIME_SUMMARY',
     FETCH_LOG: 'FETCH_LOG',
     DELETE_LOG: 'DELETE_LOG',
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
@@ -23,7 +23,7 @@ export const createLog = (title, startAt, stopAt) => {
             newLog.id = dbResult.insertId;
 
             dispatch({
-                type: actionTypes.CREATE_LOG,
+                type: actionTypes.INCREMENT_TIME_SUMMARY,
                 payload: newLog,
             })
         } catch (err) {

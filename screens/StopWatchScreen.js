@@ -8,19 +8,19 @@ import BoldText from '../components/UI/BoldText';
 import UIButton from '../components/UI/Button';
 import StartButton from '../components/StartButton';
 import Colors from '../constants/Colors';
-import { createLog } from '../store/actions/logAction';
+import { createLog } from '../store/actions/index';
 import { dateGenerator } from '../utils/dateGenerator';
 
 const StopwatchScreen = props => {
     const stopwatch = useStopwatch();
     const [curActiveTitle, setCurActiveTitle] = useState(null);
     const [waitingSavedTime, setWaitingSavedTime] = useState({}); // used to add elapsedTime for an item while waiting async action creating new log on SQLite and redux store. (Example: { Study : 3600 })
-    const logStore = useSelector(state => state.log);
+    const summaries = useSelector(state => state.summaries);
     const dispatch = useDispatch();
 
     const todayISOString = dateGenerator(new Date()).toISOString();
-    const itemElapsedTimes = logStore[todayISOString]
-        ? logStore[todayISOString].elapsedTimeSummary
+    const itemElapsedTimes = summaries[todayISOString]
+        ? summaries[todayISOString]
         : { Study: 0, Meditation: 0, Sports: 0, Eating: 0 };
 
     const resetStopwatchHandler = () => {
