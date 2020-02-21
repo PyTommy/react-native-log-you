@@ -25,6 +25,11 @@ const summaryReducer = (state = {}, actions) => {
                     [payload.title]: state[newLogDateISO][payload.title] + payload.elapsedTime,
                 }
             }
+        case actionTypes.SET_SUMMARIES:
+            return {
+                ...state,
+                ...payload
+            }
         default:
             return state;
     }

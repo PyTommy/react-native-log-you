@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -8,7 +8,7 @@ import BoldText from '../components/UI/BoldText';
 import UIButton from '../components/UI/Button';
 import StartButton from '../components/StartButton';
 import Colors from '../constants/Colors';
-import { createLog } from '../store/actions/index';
+import { createLog, fetchSummaries } from '../store/actions/index';
 import { dateGenerator } from '../utils/dateGenerator';
 
 const StopwatchScreen = props => {
@@ -19,6 +19,11 @@ const StopwatchScreen = props => {
     const dispatch = useDispatch();
 
     const todayISOString = dateGenerator(new Date()).toISOString();
+
+    useEffect(() => {
+        dispatch(fetchSummaries(todayISOString));
+    }, []);
+
     const itemElapsedTimes = summaries[todayISOString]
         ? summaries[todayISOString]
         : { Study: 0, Meditation: 0, Sports: 0, Eating: 0 };

@@ -3,6 +3,7 @@ import * as db from '../../db/db';
 
 export const actionTypes = {
     INCREMENT_TIME_SUMMARY: 'INCREMENT_TIME_SUMMARY',
+    SET_SUMMARIES: 'SET_SUMMARIES',
     FETCH_LOG: 'FETCH_LOG',
     DELETE_LOG: 'DELETE_LOG',
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
@@ -32,3 +33,19 @@ export const createLog = (title, startAt, stopAt) => {
 
     }
 };
+
+export const fetchSummaries = (dateFrom, dateTo) => {
+    if (!dateTo) dateTo = dateFrom;
+    return async dispatch => {
+        try {
+            const objectSummaries = await db.fetchSummaries(dateFrom, dateTo);
+            dispatch({
+                type: actionTypes.SET_SUMMARIES,
+                payload: objectSummaries
+            })
+
+        } catch (err) {
+            console.log(err);
+        }
+    };
+}
