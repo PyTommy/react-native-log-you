@@ -5,8 +5,6 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { dateGenerator } from '../utils/dateGenerator';
 import { fetchSummaries, fetchLogs } from '../store/actions/index';
-import DefaultText from '../components/UI/DefaultText';
-import BoldText from '../components/UI/BoldText';
 import DaySummary from '../components/DaySummary';
 
 const DayLogScreen = props => {
@@ -24,8 +22,12 @@ const DayLogScreen = props => {
 
     useEffect(() => {
         const fetchData = async () => {
-            await dispatch(fetchSummaries(isoSelectedDate, isoSelectedDate));
-            dispatch(fetchLogs(isoSelectedDate, isoSelectedDate));
+            try {
+                await dispatch(fetchSummaries(isoSelectedDate));
+                dispatch(fetchLogs(isoSelectedDate));
+            } catch (err) {
+                console.log(err);
+            }
         };
         fetchData();
     }, [isoSelectedDate, isoToday]);// use today as dependency to update at 4 am

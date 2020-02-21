@@ -34,7 +34,20 @@ export const createLog = (title, startAt, stopAt) => {
     }
 };
 
+/**
+ * Fetch specified summaries and set on redux store. 
+ * @param {string} isoDateFrom - 
+ * @param {string | undefined | null} isoDateTo - isoDateFrom will be set if not provided
+ */
 export const fetchSummaries = (isoDateFrom, isoDateTo) => {
+    // Validate params
+    if (!isoDateFrom || typeof isoDateFrom !== 'string') {
+        throw new Error('isoDate should be string');
+    }
+    if (typeof isoDateTo !== 'string' && isoDateTo) {
+        throw new Error('isoDateTo should be string or undefined');
+    };
+
     if (!isoDateTo) isoDateTo = isoDateFrom;
     return async dispatch => {
         try {
@@ -48,8 +61,20 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
         }
     };
 }
-
+/**
+ * Fetch specified logs and set on redux store.
+ * @param {string} isoDateFrom -
+ * @param {string | undefined | null} isoDateTo - isoDateFrom will be set if not provided
+ */
 export const fetchLogs = (isoDateFrom, isoDateTo) => {
+    // Validate params
+    if (!isoDateFrom || typeof isoDateFrom !== 'string') {
+        throw new Error('isoDate should be string');
+    }
+    if (typeof isoDateTo !== 'string' && isoDateTo) {
+        throw new Error('isoDateTo should be string or undefined');
+    };
+
     if (!isoDateTo) isoDateTo = isoDateFrom;
     return async dispatch => {
         try {
@@ -65,10 +90,14 @@ export const fetchLogs = (isoDateFrom, isoDateTo) => {
     };
 }
 
+/**
+ * Delete All log data from SQL database and redux store 
+ */
 export const deleteAllLogs = () => {
     return async dispatch => {
         try {
             await db.deleteAllLogs();
+            // init redux store
         } catch (err) {
             console.log(err);
         }
