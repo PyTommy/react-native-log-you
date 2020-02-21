@@ -13,7 +13,7 @@ export const createLog = (title, startAt, stopAt) => {
     return async dispatch => {
         const newLog = new Log('tmpId', title, startAt, stopAt);
         try {
-            const dbResult = await db.insertLog(
+            const newLogId = await db.insertLog(
                 newLog.title,
                 newLog.isoDate,
                 newLog.startAt.toISOString(),
@@ -21,7 +21,7 @@ export const createLog = (title, startAt, stopAt) => {
                 newLog.elapsedTime
             );
 
-            newLog.id = dbResult.insertId;
+            newLog.id = newLogId;
 
             dispatch({
                 type: actionTypes.INCREMENT_TIME_SUMMARY,
@@ -54,7 +54,6 @@ export const fetchLogs = (isoDateFrom, isoDateTo) => {
     return async dispatch => {
         try {
             const objectLogs = await db.fetchLogs(isoDateFrom, isoDateTo);
-            console.log(objectLogs);
             dispatch({
                 type: actionTypes.FETCH_LOGS,
                 payload: objectLogs

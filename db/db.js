@@ -4,6 +4,9 @@ import { isoDatesBetween } from '../utils/dateGenerator';
 
 const db = SQLite.openDatabase('logs.db');
 
+/**
+ * Create table if not exists
+ */
 export const init = () => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -28,6 +31,15 @@ export const init = () => {
     })
 };
 
+/**
+ * Insert a log and return the id
+ * @param {string} title 
+ * @param {string} isoDate - ISO formatted date
+ * @param {string} startAt - ISO formatted date
+ * @param {string} stopAt - ISO formatted date
+ * @param {number} elapsedTime 
+ * @returns {number} - ID of the log 
+ */
 export const insertLog = (title, isoDate, startAt, stopAt, elapsedTime) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
@@ -42,7 +54,7 @@ export const insertLog = (title, isoDate, startAt, stopAt, elapsedTime) => {
                 `,
                 [title, isoDate, startAt, stopAt, elapsedTime],
                 (_, result) => {
-                    resolve(result);
+                    resolve(result.insertId);
                 },
                 (_, err) => {
                     reject(err);
