@@ -33,7 +33,7 @@ export const createLog = (title, startAt, stopAt) => {
                     payload: newLog
                 })
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
 
     }
@@ -62,7 +62,7 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
                 payload: objectSummaries
             })
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
 }
@@ -90,9 +90,30 @@ export const fetchLogs = (isoDateFrom, isoDateTo) => {
             })
 
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     };
+}
+
+/**
+ * Delete a log. 
+ * @param {number} id - log id
+ * @param {string} isoDate - isoDate of the log
+ * @param {number} elapsedTime - Elapsed time of the log
+ */
+export const deleteLog = (selectedLog) => {
+    return async dispatch => {
+        try {
+            await db.deleteLog(selectedLog.id);
+            dispatch({
+                type: actionTypes.DELETE_LOG,
+                payload: { ...selectedLog }
+            })
+        } catch (err) {
+            console.error(err);
+        }
+
+    }
 }
 
 /**
@@ -104,7 +125,7 @@ export const deleteAllLogs = () => {
             await db.deleteAllLogs();
             // init redux store
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
     }
 };

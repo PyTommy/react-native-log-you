@@ -163,6 +163,23 @@ export const fetchLogs = (isoDateFrom, isoDateTo) => {
     })
 };
 
+export const deleteLog = (id) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `DELETE FROM logs WHERE id=?`,
+                [id],
+                (_, result) => {
+                    resolve();
+                },
+                (_, err) => {
+                    reject(err);
+                }
+            );
+        });
+    })
+};
+
 export const deleteAllLogs = () => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {

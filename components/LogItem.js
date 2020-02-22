@@ -1,17 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import moment from 'moment';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
 
 import BoldText from './UI/BoldText';
 import Colors from '../constants/Colors';
+import { deleteLog } from '../store/actions/index';
 
 const LogItem = props => {
-    const { id, elapsedTime, title, startAt, stopAt } = props.log;
-
+    const [deleting, setDeleting] = useState(false);
+    const dispatch = useDispatch();
+    const { elapsedTime, title, startAt, stopAt } = props.log;
 
     const onDeleteHandler = () => {
-
+        if (!deleting) {
+            const asyncFunc = async () => {
+                try {
+                    setDeleting(() => true);
+                    await dispatch(deleteLog(props.log));
+                    setDeleting(() => false);
+                } catch (err) {
+                    console.error(err);
+                }
+            };
+            asyncFunc();
+        }
     };
 
     return (
@@ -27,7 +41,10 @@ const LogItem = props => {
                 {Math.floor(elapsedTime / 60)} min
             </BoldText>
             {props.editing && (
-                <TouchableOpacity style={styles.deleteButton}>
+                <TouchableOpacity
+                    style={styles.deleteButton}
+                    onPress={onDeleteHandler}
+                >
                     <MaterialCommunityIcons
                         name='delete-forever'
                         size={30}

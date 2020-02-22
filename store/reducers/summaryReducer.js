@@ -29,6 +29,16 @@ const summaryReducer = (state = {}, actions) => {
                 ...state,
                 ...payload
             }
+        case actionTypes.DELETE_LOG:
+            const { isoDate, title, elapsedTime } = payload;
+            if (!state[isoDate]) return state;
+            return {
+                ...state,
+                [isoDate]: {
+                    ...state[isoDate],
+                    [title]: state[isoDate][title] - elapsedTime
+                }
+            }
         default:
             return state;
     }

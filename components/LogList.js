@@ -8,6 +8,7 @@ import LogItem from './LogItem';
 import Centered from './UI/Center';
 
 
+
 const LogList = props => {
     const [editing, setEditing] = useState(false);
 

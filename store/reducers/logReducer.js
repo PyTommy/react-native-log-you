@@ -17,6 +17,22 @@ const logReducer = (state = {}, actions) => {
                 ...state,
                 ...payload,
             }
+        case actionTypes.DELETE_LOG:
+            const { id, isoDate } = payload;
+
+            if (!state[isoDate]) return state;
+
+            const updatedLogs = state[isoDate].filter(curLog => {
+                return curLog.id !== id;
+            });
+            if (state[isoDate].length === updatedLogs.length) {
+                throw new Error('Log not found!! Must be something wrong with your programming!!');
+            }
+
+            return {
+                ...state,
+                [isoDate]: updatedLogs
+            }
         default:
             return state;
     }
