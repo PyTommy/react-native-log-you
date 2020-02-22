@@ -43,8 +43,7 @@ const TabNavigator = () => {
         >
             <Tab.Screen
                 name="Stopwatch"
-                component={StopwatchScreen}
-                options={{ cardStyle: { backgroundColor: 'blue' } }} />
+                component={StopwatchScreen} />
             <Tab.Screen
                 name="Log"
                 component={LogStackNavigator} />

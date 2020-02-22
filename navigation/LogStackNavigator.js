@@ -23,9 +23,6 @@ function LogStackNavigator() {
             <Stack.Screen
                 name="DayLog"
                 component={DayLogScreen}
-                options={{
-                    headerTitle: 'Today',
-                }}
             />
             <Stack.Screen
                 name="ItemLog"

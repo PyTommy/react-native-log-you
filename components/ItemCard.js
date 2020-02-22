@@ -26,6 +26,7 @@ const ItemCard = props => {
     }
 
 
+
     return (
         <TouchableOpacity onPress={props.onPress} style={styles.ItemCard}>
             <View
