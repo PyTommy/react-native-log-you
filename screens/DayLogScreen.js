@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ScrollView, StyleSheet, Button } from 'react-native'
+import { View, ScrollView, StyleSheet, Button } from 'react-native'
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import moment from 'moment';
@@ -12,8 +12,9 @@ import { IoniconsHeaderButton } from '../components/UI/HeaderButton';
 import LogList from '../components/LogList';
 
 const DayLogScreen = props => {
-    const logs = useSelector(state => state.logs);
-    const summaries = useSelector(state => state.summaries);
+    const [showLogs, setShowLogs] = useState(false);
+    const logs = useSelector(state => state.logs); // {[isoDate]: [{log}]}
+    const summaries = useSelector(state => state.summaries); // {[isoDate]: { summary }}
     const dispatch = useDispatch();
 
     const today = dateGenerator(new Date());
@@ -39,11 +40,13 @@ const DayLogScreen = props => {
     const summary = summaries[isoSelectedDate];
 
     useEffect(() => {
-        console.log('DayLogScreen: useEffect called')
         const fetchData = async () => {
             try {
-                await dispatch(fetchSummaries(isoSelectedDate));
-                dispatch(fetchLogs(isoSelectedDate));
+                if (showLogs) {
+                    dispatch(fetchLogs(isoSelectedDate));
+                } else {
+                    dispatch(fetchSummaries(isoSelectedDate));
+                }
             } catch (err) {
                 console.log(err);
             }
@@ -78,19 +81,27 @@ const DayLogScreen = props => {
         ),
     });
 
-
-    return (
-        <ScrollView style={styles.screen}>
-            <DaySummary summary={summary} />
-            <LogList />
-            <Button
-                title="ItemLog"
-                onPress={() => {
-                    props.navigation.navigate('ItemLog');
-                }}
-            />
-        </ScrollView>
-    )
+    if (showLogs) {
+        return (
+            <View style={{ flex: 1 }}>
+                <LogList logs={logs[isoSelectedDate]} />
+                <Button
+                    title={'Show Summary'}
+                    onPress={() => setShowLogs(false)}
+                />
+            </View>
+        )
+    } else {
+        return (
+            <ScrollView style={styles.screen}>
+                <DaySummary summary={summary} />
+                <Button
+                    title={'Show Logs'}
+                    onPress={() => setShowLogs(true)}
+                />
+            </ScrollView>
+        );
+    };
 }
 
 const styles = StyleSheet.create({

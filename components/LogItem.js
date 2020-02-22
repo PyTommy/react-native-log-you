@@ -14,7 +14,7 @@ const LogItem = props => {
                 {title}
             </BoldText>
             <BoldText style={{ ...styles.text, color: Colors[title], ...styles.between }}>
-                {moment(startAt).format('hh:mm')} - {moment(stopAt).format('hh:mm')}
+                {moment(startAt).format('HH:mm')} - {moment(stopAt).format('HH:mm')}
             </BoldText>
             <BoldText style={{ ...styles.text, color: Colors[title], ...styles.elapsedTime }}>
                 {Math.floor(elapsedTime / 60)} min

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, FlatList, StyleSheet, SafeAreaView } from 'react-native'
 
 import Colors from '../constants/Colors';
 import BoldText from './UI/BoldText';
@@ -8,6 +8,20 @@ import LogItem from './LogItem';
 
 
 const LogList = props => {
+    if (!props.logs || props.logs.length === 0) return null;
+
+    const logItems = (
+        <FlatList
+            // contentContainerStyle={styles.logItemsContainer}
+            data={props.logs}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+                <LogItem
+                    log={item}
+                />
+            )} />
+    );
+
     return (
         <View style={styles.LogList}>
             <View style={styles.header}>
@@ -21,21 +35,14 @@ const LogList = props => {
                     textColor={Colors.l3}
                 />
             </View>
-            <View style={styles.logItemsContainer}>
-                <LogItem
-                    log={{ elapsedTime: 3500, startAt: new Date(), stopAt: new Date(), title: 'Study' }}
-                />
-                <LogItem
-                    log={{ elapsedTime: 3980, startAt: new Date(), stopAt: new Date(), title: 'Meditation' }}
-                />
-            </View>
+            {logItems}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     LogList: {
-        marginTop: 30,
+        flex: 1,
         backgroundColor: Colors.d2,
         paddingVertical: 15,
         paddingHorizontal: 20,
