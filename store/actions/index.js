@@ -3,6 +3,7 @@ import * as db from '../../db/db';
 
 export const actionTypes = {
     INCREMENT_TIME_SUMMARY: 'INCREMENT_TIME_SUMMARY',
+    ADD_LOG: 'ADD_LOG',
     SET_SUMMARIES: 'SET_SUMMARIES',
     FETCH_LOGS: 'FETCH_LOGS',
     DELETE_LOG: 'DELETE_LOG',
@@ -26,7 +27,11 @@ export const createLog = (title, startAt, stopAt) => {
             dispatch({
                 type: actionTypes.INCREMENT_TIME_SUMMARY,
                 payload: newLog,
-            })
+            }),
+                dispatch({
+                    type: actionTypes.ADD_LOG,
+                    payload: newLog
+                })
         } catch (err) {
             console.log(err);
         }
