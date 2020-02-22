@@ -1,37 +1,56 @@
-import React from 'react'
-import { View, FlatList, StyleSheet, SafeAreaView } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native'
 
 import Colors from '../constants/Colors';
 import BoldText from './UI/BoldText';
 import UIButton from './UI/Button';
 import LogItem from './LogItem';
+import Centered from './UI/Center';
 
 
 const LogList = props => {
-    if (!props.logs || props.logs.length === 0) return null;
+    const [editing, setEditing] = useState(false);
 
-    const logItems = (
-        <FlatList
-            // contentContainerStyle={styles.logItemsContainer}
-            data={props.logs}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-                <LogItem
-                    log={item}
-                />
-            )} />
-    );
+    // Finish editing when selected date change.
+    const { isoSelectedDate } = props;
+    useEffect(() => {
+        if (editing) setEditing(() => false);
+    }, [isoSelectedDate]);
+
+
+    let logItems;
+    if (props.logs && props.logs.length !== 0) {
+        logItems = (
+            <FlatList
+                data={props.logs}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                    <LogItem log={item} editing={editing} />
+                )} />
+        );
+    }
+
+    if (!logItems) {
+        return (
+            <Centered style={styles.LogList}>
+                {props.logs
+                    ? <BoldText style={styles.notFound}>Logs Not found</BoldText>
+                    : <ActivityIndicator color={Colors.l2} size={20} /> // logs are not loaded yet.
+                }
+            </Centered>
+        );
+    }
 
     return (
         <View style={styles.LogList}>
             <View style={styles.header}>
                 <BoldText style={styles.headerTitle}>Log</BoldText>
                 <UIButton
-                    title='EDIT'
-                    onPress={() => { }}
+                    title={editing ? 'Finish Editing' : 'EDIT'}
+                    onPress={() => setEditing(prevState => !prevState)}
                     height={25}
-                    width={70}
-                    style={{ borderWidth: 1.5, borderColor: Colors.l3, backgroundColor: 'transparent' }}
+                    width={'auto'}
+                    style={styles.editButton}
                     textColor={Colors.l3}
                 />
             </View>
@@ -43,8 +62,7 @@ const LogList = props => {
 const styles = StyleSheet.create({
     LogList: {
         flex: 1,
-        backgroundColor: Colors.d2,
-        paddingVertical: 15,
+        paddingTop: 15,
         paddingHorizontal: 20,
     },
     header: {
@@ -56,7 +74,17 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 20,
         color: Colors.l2,
-    }
+    },
+    editButton: {
+        borderWidth: 1.5,
+        borderColor: Colors.l3,
+        backgroundColor: 'transparent',
+        paddingHorizontal: 10
+    },
+    notFound: {
+        fontSize: 16,
+        color: Colors.l2
+    },
 })
 
 

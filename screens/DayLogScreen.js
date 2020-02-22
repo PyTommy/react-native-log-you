@@ -4,12 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import moment from 'moment';
 
-
 import { dateGenerator } from '../utils/dateGenerator';
 import { fetchSummaries, fetchLogs } from '../store/actions/index';
 import DaySummary from '../components/DaySummary';
 import { IoniconsHeaderButton } from '../components/UI/HeaderButton';
 import LogList from '../components/LogList';
+import UIButton from '../components/UI/Button';
+import Colors from '../constants/Colors';
+
 
 const DayLogScreen = props => {
     const [showLogs, setShowLogs] = useState(false);
@@ -18,7 +20,7 @@ const DayLogScreen = props => {
     const dispatch = useDispatch();
 
     const today = dateGenerator(new Date());
-    const isoToday = today.toISOString(); // Change this later
+    const isoToday = today.toISOString();
 
     const [selectedDate, setSelectedDate] = useState(today);
     const isoSelectedDate = selectedDate.toISOString();
@@ -37,8 +39,13 @@ const DayLogScreen = props => {
         });
     };
 
+    const toggleShowLogs = () => {
+        setShowLogs(prevState => !prevState);
+    };
+
     const summary = summaries[isoSelectedDate];
 
+    // fetch logs or summary of selected date.
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -52,7 +59,7 @@ const DayLogScreen = props => {
             }
         };
         fetchData();
-    }, [isoSelectedDate, dispatch, isoToday]);// use today as dependency to update at 4 am
+    }, [isoSelectedDate, dispatch, isoToday, showLogs]);// use today as dependency to update after 4 am
 
     // Customize header
     props.navigation.setOptions({
@@ -83,28 +90,56 @@ const DayLogScreen = props => {
 
     if (showLogs) {
         return (
-            <View style={{ flex: 1 }}>
-                <LogList logs={logs[isoSelectedDate]} />
-                <Button
-                    title={'Show Summary'}
-                    onPress={() => setShowLogs(false)}
+            <View style={styles.screen}>
+                <LogList
+                    logs={logs[isoSelectedDate]}
+                    isoSelectedDate={isoSelectedDate}
                 />
+                <View style={styles.togglerContainer}>
+                    <UIButton
+                        title={'Show Summary'}
+                        width={150}
+                        onPress={toggleShowLogs}
+                        style={styles.toggler}
+                        textColor={Colors.primary}
+                        bold={true} />
+                </View>
             </View>
         )
     } else {
         return (
             <ScrollView style={styles.screen}>
                 <DaySummary summary={summary} />
-                <Button
-                    title={'Show Logs'}
-                    onPress={() => setShowLogs(true)}
-                />
+                <View style={styles.togglerContainer}>
+                    <UIButton
+                        title={'Show Logs'}
+                        onPress={toggleShowLogs}
+                        style={styles.toggler}
+                        textColor={Colors.primary}
+                        bold={true} />
+                </View>
             </ScrollView>
         );
     };
 }
 
 const styles = StyleSheet.create({
+    screen: {
+        backgroundColor: Colors.d2,
+        flex: 1,
+    },
+    togglerContainer: {
+        marginVertical: 10,
+        alignItems: 'center',
+    },
+    toggler: {
+        width: 'auto',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        backgroundColor: 'transparent',
+        borderColor: Colors.primary,
+        borderWidth: 1.5,
+    }
 })
 
 

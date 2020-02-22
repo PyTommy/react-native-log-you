@@ -1,5 +1,5 @@
 export default {
-    primary: 'rgb(255,140,0)',
+    primary: 'rgba(255,140,0, 0.87)',
     success: 'rgb(92, 184, 92)',
     danger: 'rgb(217, 83, 79)',
     d1: '#121212',

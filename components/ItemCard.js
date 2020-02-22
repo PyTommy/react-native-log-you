@@ -52,7 +52,7 @@ const ItemCard = props => {
                 </View>
                 <Ionicons
                     name='ios-arrow-forward'
-                    size={25}
+                    size={30}
                     color={Colors.l2}
                 />
             </View>
@@ -63,7 +63,6 @@ const ItemCard = props => {
 const styles = StyleSheet.create({
     ItemCard: {
         padding: 15,
-        backgroundColor: Colors.d2,
         flexDirection: 'row',
         borderBottomWidth: 1,
         borderBottomColor: Colors.d3,
