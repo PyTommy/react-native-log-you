@@ -9,6 +9,7 @@ import { dateGenerator } from '../utils/dateGenerator';
 import { fetchSummaries, fetchLogs } from '../store/actions/index';
 import DaySummary from '../components/DaySummary';
 import { IoniconsHeaderButton } from '../components/UI/HeaderButton';
+import LogList from '../components/LogList';
 
 const DayLogScreen = props => {
     const logs = useSelector(state => state.logs);
@@ -81,6 +82,7 @@ const DayLogScreen = props => {
     return (
         <ScrollView style={styles.screen}>
             <DaySummary summary={summary} />
+            <LogList />
             <Button
                 title="ItemLog"
                 onPress={() => {
