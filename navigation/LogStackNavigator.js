@@ -2,8 +2,7 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import DayLogScreen from '../screens/DayLogScreen';
-import ItemLogScreen from '../screens/ItemLogScreen';
-import EditDayLogScreen from '../screens/EditDayLogScreen';
+import ItemsScreen from '../screens/ItemsScreen';
 import Colors from '../constants/Colors';
 
 const Stack = createStackNavigator();
@@ -25,18 +24,12 @@ function LogStackNavigator() {
                 component={DayLogScreen}
             />
             <Stack.Screen
-                name="ItemLog"
-                component={ItemLogScreen}
-                options={{
-                    headerTitle: 'Study',
-                }}
-            />
-            <Stack.Screen
-                name="EditDayLog"
-                component={EditDayLogScreen}
-                options={{
-                    headerTitle: "Edit Day Log",
-                }}
+                name="Items"
+                component={ItemsScreen}
+                options={({ route }) => ({
+                    headerTitle: route.params.title,
+                    headerTitleStyle: { fontSize: 20, color: Colors[route.params.title] }
+                })}
             />
         </Stack.Navigator>
     );

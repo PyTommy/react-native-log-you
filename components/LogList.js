@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native'
 import Colors from '../constants/Colors';
 import BoldText from './UI/BoldText';
 import UIButton from './UI/Button';
-import LogItem from './LogItem';
+import LogRow from './LogRow';
 import Centered from './UI/Center';
 
 
@@ -26,7 +26,7 @@ const LogList = props => {
                 data={props.logs}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <LogItem log={item} editing={editing} />
+                    <LogRow log={item} editing={editing} />
                 )} />
         );
     }

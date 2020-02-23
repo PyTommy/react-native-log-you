@@ -109,7 +109,7 @@ const DayLogScreen = props => {
     } else {
         return (
             <ScrollView style={styles.screen}>
-                <DaySummary summary={summary} />
+                <DaySummary summary={summary} navigation={props.navigation} />
                 <View style={styles.togglerContainer}>
                     <UIButton
                         title={'Show Logs'}
