@@ -10,12 +10,12 @@ export const actionTypes = {
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
 };
 
-export const createLog = (title, startAt, stopAt) => {
+export const createLog = (category, startAt, stopAt) => {
     return async dispatch => {
-        const newLog = new Log('tmpId', title, startAt, stopAt);
+        const newLog = new Log('tmpId', category, startAt, stopAt);
         try {
             const newLogId = await db.insertLog(
-                newLog.title,
+                newLog.category,
                 newLog.isoDate,
                 newLog.startAt.toISOString(),
                 newLog.stopAt.toISOString(),

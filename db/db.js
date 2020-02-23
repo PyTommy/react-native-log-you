@@ -13,7 +13,7 @@ export const init = () => {
             tx.executeSql(
                 `CREATE TABLE IF NOT EXISTS logs (
                     id INTEGER PRIMARY KEY NOT NULL, 
-                    title TEXT NOT NULL, 
+                    category TEXT NOT NULL, 
                     isoDate TEXT NOT NULL,
                     startAt TEXT NOT NULL,
                     stopAt TEXT NOT NULL,
@@ -33,26 +33,26 @@ export const init = () => {
 
 /**
  * Insert a log and return the id
- * @param {string} title 
+ * @param {string} category 
  * @param {string} isoDate - ISO formatted date
  * @param {string} startAt - ISO formatted date
  * @param {string} stopAt - ISO formatted date
  * @param {number} elapsedTime 
  * @returns {number} - ID of the log 
  */
-export const insertLog = (title, isoDate, startAt, stopAt, elapsedTime) => {
+export const insertLog = (category, isoDate, startAt, stopAt, elapsedTime) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
                 `INSERT INTO logs(
-                    title,
+                    category,
                     isoDate,
                     startAt, 
                     stopAt,
                     elapsedTime
                 ) VALUES (?, ?, ?, ?, ?);
                 `,
-                [title, isoDate, startAt, stopAt, elapsedTime],
+                [category, isoDate, startAt, stopAt, elapsedTime],
                 (_, result) => {
                     resolve(result.insertId);
                 },
@@ -72,7 +72,7 @@ export const insertLog = (title, isoDate, startAt, stopAt, elapsedTime) => {
  * Formatted as 
  * {
  *  [dateISOString]: {
- *      [title]: elapsedTime
+ *      [category]: elapsedTime
  *  }
  * }
  */
@@ -81,9 +81,9 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
         db.transaction(tx => {
             tx.executeSql(
                 `
-                    SELECT isoDate, title, SUM(elapsedTime) AS elapsedTime FROM logs
+                    SELECT isoDate, category, SUM(elapsedTime) AS elapsedTime FROM logs
                     WHERE isoDate >= ? AND isoDate <= ?
-                    GROUP BY isoDate, title
+                    GROUP BY isoDate, category
                 `,
                 [isoDateFrom, isoDateTo],
                 (_, result) => {
@@ -100,14 +100,14 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
                         };
                     });
 
-                    const itemSums = result.rows._array; // itemSums = [{title, elapsedTime, date}]
+                    const itemSums = result.rows._array; // itemSums = [{category, elapsedTime, date}]
                     itemSums.forEach((itemSum) => {
                         const isoDate = itemSum.isoDate;
-                        const title = itemSum.title;
+                        const category = itemSum.category;
                         const elapsedTime = itemSum.elapsedTime;
                         summaries[isoDate] = {
                             ...summaries[isoDate],
-                            [title]: summaries[isoDate][title] + elapsedTime
+                            [category]: summaries[isoDate][category] + elapsedTime
                         };
                     });
 

@@ -1,40 +1,40 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import ItemCard from './ItemCard';
+import DaySummaryCategoryCard from './DaySummaryCategoryCard';
 
 const DaySummary = props => {
     const { summary = {}, navigation } = props;
 
     const { Study, Meditation, Sports, Eating } = summary;
 
-    const onPressHandler = (title) => {
-        navigation.navigate('Items', { title });
+    const onPressHandler = (category) => {
+        navigation.navigate('Categories', { category });
     };
 
     return (
         <View style={styles.DaySummary}>
-            <ItemCard
+            <DaySummaryCategoryCard
                 onPress={() => onPressHandler('Study')}
-                title={'Study'}
+                category={'Study'}
                 elapsedTime={Study}
                 iconName='book-open-page-variant'
             />
-            <ItemCard
+            <DaySummaryCategoryCard
                 onPress={() => onPressHandler('Meditation')}
-                title={'Meditation'}
+                category={'Meditation'}
                 elapsedTime={Meditation}
                 iconName='heart-pulse'
             />
-            <ItemCard
+            <DaySummaryCategoryCard
                 onPress={() => onPressHandler('Sports')}
-                title={'Sports'}
+                category={'Sports'}
                 elapsedTime={Sports}
                 iconName='run'
             />
-            <ItemCard
+            <DaySummaryCategoryCard
                 onPress={() => onPressHandler('Eating')}
-                title={'Eating'}
+                category={'Eating'}
                 elapsedTime={Eating}
                 iconName='silverware-fork-knife'
             />

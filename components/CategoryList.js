@@ -2,22 +2,22 @@ import React from 'react'
 import { FlatList } from 'react-native';
 
 import { useSelector } from 'react-redux';
-import ItemSummaryCard from './ItemSummaryCard';
+import CategoryCard from './CategoryCard';
 import NotFound from './UI/NotFound';
 
 const ItemSummaryList = props => {
-    const title = props.title;
+    const category = props.category;
 
     const summaries = useSelector(state => state.summaries);
     const isoDates = Object.keys(summaries).sort((a, b) => b - a);
 
     const data = [];
     isoDates.forEach(isoDate => {
-        if (summaries[isoDate][title] <= 0) return null; // No need to render if elapsedTime === 0
+        if (summaries[isoDate][category] <= 0) return null; // No need to render if elapsedTime === 0
 
         data.push({
             isoDate,
-            elapsedTime: summaries[isoDate][title],
+            elapsedTime: summaries[isoDate][category],
         });
     });
 
@@ -32,8 +32,8 @@ const ItemSummaryList = props => {
             keyExtractor={item => item.isoDate}
             renderItem={({ item }) => {
                 return (
-                    <ItemSummaryCard
-                        elapsedTime={summaries[item.isoDate][title]}
+                    <CategoryCard
+                        elapsedTime={summaries[item.isoDate][category]}
                         isoDate={item.isoDate}
                     />
                 );

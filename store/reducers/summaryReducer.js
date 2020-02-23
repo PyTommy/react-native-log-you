@@ -13,7 +13,7 @@ const summaryReducer = (state = {}, actions) => {
                         Meditation: 0,
                         Eating: 0,
                         Sports: 0,
-                        [payload.title]: payload.elapsedTime
+                        [payload.category]: payload.elapsedTime
                     }
                 }
             }
@@ -21,7 +21,7 @@ const summaryReducer = (state = {}, actions) => {
                 ...state,
                 [payload.isoDate]: {
                     ...state[payload.isoDate],
-                    [payload.title]: state[payload.isoDate][payload.title] + payload.elapsedTime,
+                    [payload.category]: state[payload.isoDate][payload.category] + payload.elapsedTime,
                 }
             }
         case actionTypes.SET_SUMMARIES:
@@ -30,13 +30,13 @@ const summaryReducer = (state = {}, actions) => {
                 ...payload
             }
         case actionTypes.DELETE_LOG:
-            const { isoDate, title, elapsedTime } = payload;
+            const { isoDate, category, elapsedTime } = payload;
             if (!state[isoDate]) return state;
             return {
                 ...state,
                 [isoDate]: {
                     ...state[isoDate],
-                    [title]: state[isoDate][title] - elapsedTime
+                    [category]: state[isoDate][category] - elapsedTime
                 }
             }
         default:

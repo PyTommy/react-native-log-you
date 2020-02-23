@@ -4,18 +4,18 @@ import { dateGenerator } from '../utils/dateGenerator';
 /**
  * Create Log class 
  * @param {string} id 
- * @param {string} title 
+ * @param {string} category 
  * @param {date} startAt - Start Date  
  * @param {date} stopAt - Stop Date
  * @param {string | undefined | null} isoDate - date formatted as ISO string. Generated automatically if not provided.
  * @param {number | undefined | null} elapsedTime - time spent in second. Generated automatically if not provided.
  */
 export default class Log {
-    constructor(id, title, startAt, stopAt, isoDate, elapsedTime) {
+    constructor(id, category, startAt, stopAt, isoDate, elapsedTime) {
         // Throw errors if params are invalid
         const errors = [];
         if (typeof id !== 'string') errors.push('{string} id');
-        if (typeof title !== 'string') errors.push('{string} title ');
+        if (typeof category !== 'string') errors.push('{string} category ');
         if (!(startAt instanceof Date)) errors.push('{date} startAt');
         if (!(stopAt instanceof Date)) errors.push('{date} stopAt');
         if (isoDate !== null && isoDate !== undefined && !(typeof isoDate === 'string')) {
@@ -29,7 +29,7 @@ export default class Log {
         }
 
         this.id = id,
-            this.title = title,
+            this.category = category,
             this.startAt = startAt,
             this.stopAt = stopAt,
             this.isoDate = isoDate || dateGenerator(startAt).toISOString(),

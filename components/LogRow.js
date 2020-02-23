@@ -11,7 +11,7 @@ import { deleteLog } from '../store/actions/index';
 const LogItem = props => {
     const [deleting, setDeleting] = useState(false);
     const dispatch = useDispatch();
-    const { elapsedTime, title, startAt, stopAt } = props.log;
+    const { elapsedTime, category, startAt, stopAt } = props.log;
 
     const onDeleteHandler = () => {
         if (!deleting) {
@@ -31,13 +31,13 @@ const LogItem = props => {
     return (
         <View
             style={styles.LogItem}>
-            <BoldText style={{ ...styles.text, color: Colors[title], ...styles.title }}>
-                {title}
+            <BoldText style={{ ...styles.text, color: Colors[category], ...styles.category }}>
+                {category}
             </BoldText>
-            <BoldText style={{ ...styles.text, color: Colors[title], ...styles.between }}>
+            <BoldText style={{ ...styles.text, color: Colors[category], ...styles.between }}>
                 {moment(startAt).format('HH:mm')} - {moment(stopAt).format('HH:mm')}
             </BoldText>
-            <BoldText style={{ ...styles.text, color: Colors[title], ...styles.elapsedTime }}>
+            <BoldText style={{ ...styles.text, color: Colors[category], ...styles.elapsedTime }}>
                 {Math.floor(elapsedTime / 60)} min
             </BoldText>
             {props.editing && (
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         color: Colors.l2,
         fontSize: 15
     },
-    title: {
+    category: {
         marginLeft: 2,
         width: 90,
     },

@@ -13,7 +13,7 @@ import { dateGenerator } from '../utils/dateGenerator';
 
 const StopwatchScreen = props => {
     const stopwatch = useStopwatch();
-    const [curActiveTitle, setCurActiveTitle] = useState(null);
+    const [curActiveCategory, setCurActiveCategory] = useState(null);
     const [waitingSavedTime, setWaitingSavedTime] = useState({}); // used to add elapsedTime for an item while waiting async action creating new log on SQLite and redux store. (Example: { Study : 3600 })
     const summaries = useSelector(state => state.summaries);
     const dispatch = useDispatch();
@@ -28,47 +28,47 @@ const StopwatchScreen = props => {
         : { Study: 0, Meditation: 0, Sports: 0, Eating: 0 };
 
     const resetStopwatchHandler = () => {
-        setCurActiveTitle(() => null);
+        setCurActiveCategory(() => null);
         stopwatch.reset();
     }
 
     const saveLogHandler = async () => {
         setWaitingSavedTime(() => ({
-            [curActiveTitle]: stopwatch.elapsedTime
+            [curActiveCategory]: stopwatch.elapsedTime
         }));
-        await dispatch(createLog(curActiveTitle, stopwatch.startAt, new Date()));
+        await dispatch(createLog(curActiveCategory, stopwatch.startAt, new Date()));
         setWaitingSavedTime(() => ({}));
     }
 
     const saveAndResetStopwatch = () => {
-        if (!curActiveTitle) return;
+        if (!curActiveCategory) return;
         saveLogHandler();
         resetStopwatchHandler();
     };
 
-    const startStopwatchHandler = (selectedTitle) => { // Async ??
-        if (curActiveTitle === selectedTitle) return;
+    const startStopwatchHandler = (selectedCategory) => { // Async ??
+        if (curActiveCategory === selectedCategory) return;
 
-        if (curActiveTitle) saveLogHandler();
-        setCurActiveTitle(() => selectedTitle);
+        if (curActiveCategory) saveLogHandler();
+        setCurActiveCategory(() => selectedCategory);
         stopwatch.start(); // This reset and start stopwatch.
     };
 
-    const itemTitles = Object.keys(itemElapsedTimes).sort();
-    const startButtons = itemTitles.map(itemTitle => {
-        const isItemActive = curActiveTitle === itemTitle;
+    const itemCategories = Object.keys(itemElapsedTimes).sort();
+    const startButtons = itemCategories.map(itemCategory => {
+        const isItemActive = curActiveCategory === itemCategory;
 
-        let elapsedTime = itemElapsedTimes[itemTitle];
+        let elapsedTime = itemElapsedTimes[itemCategory];
         if (isItemActive) {
             elapsedTime += stopwatch.elapsedTime;
         }
-        elapsedTime += waitingSavedTime[itemTitle] || 0;
+        elapsedTime += waitingSavedTime[itemCategory] || 0;
 
         return (
             <StartButton
-                key={itemTitle}
-                title={itemTitle}
-                onPress={() => startStopwatchHandler(itemTitle)}
+                key={itemCategory}
+                category={itemCategory}
+                onPress={() => startStopwatchHandler(itemCategory)}
                 elapsedTime={elapsedTime}
                 active={isItemActive}
             />

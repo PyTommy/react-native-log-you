@@ -9,22 +9,22 @@ const StartButton = props => {
     const [hour, min, sec] = secondToStringHHMMSSArray(props.elapsedTime);
     const timeString = `${hour}:${min}:${sec}`;
 
-    const activeColor = Colors[props.title];
+    const activeColor = Colors[props.category];
 
     return (
         <TouchableOpacity
             style={{
                 ...styles.startButton,
                 backgroundColor: props.active ? activeColor : Colors.d1,
-                borderColor: Colors[props.title],
+                borderColor: Colors[props.category],
             }}
             onPress={props.onPress}>
             <BoldText
                 style={{
-                    ...styles.title,
+                    ...styles.category,
                     color: props.active ? Colors.l1 : activeColor
                 }}>
-                {props.title}
+                {props.category}
             </BoldText>
             <BoldText
                 style={{
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
         marginBottom: "5%",
         backgroundColor: Colors.d3
     },
-    title: {
+    category: {
         fontSize: 25,
         marginBottom: 7,
     },

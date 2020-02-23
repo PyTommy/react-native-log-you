@@ -2,7 +2,7 @@ import Log from './log';
 
 describe('class Log', () => {
     const id = 'string';
-    const title = 'string';
+    const category = 'string';
     const startAt = new Date();
     const stopAt = new Date();
     const isoDate = 'string';
@@ -10,16 +10,16 @@ describe('class Log', () => {
 
     describe('Create class Log', () => {
         test('Create class Log', () => {
-            const log = new Log(id, title, startAt, stopAt, isoDate, elapsedTime);
+            const log = new Log(id, category, startAt, stopAt, isoDate, elapsedTime);
             expect(!!log).toBe(true);
-            expect(log).toEqual({ id, title, startAt, stopAt, isoDate, elapsedTime });
+            expect(log).toEqual({ id, category, startAt, stopAt, isoDate, elapsedTime });
         });
         test('Create class Log with undefined date and elapsedTime', () => {
-            const log = new Log(id, title, startAt, stopAt);
+            const log = new Log(id, category, startAt, stopAt);
             expect(!!log).toBe(true);
         });
         test('Create class Log when date and elapsedTime are null', () => {
-            const log = new Log(id, title, startAt, stopAt, null, null);
+            const log = new Log(id, category, startAt, stopAt, null, null);
             expect(!!log).toBe(true);
         });
     })

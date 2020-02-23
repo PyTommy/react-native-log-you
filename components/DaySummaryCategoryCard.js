@@ -10,7 +10,7 @@ import BoldText from './UI/BoldText';
 
 
 const ItemCard = props => {
-    const { title, elapsedTime, iconName } = props;
+    const { category, elapsedTime, iconName } = props;
     let hour, min;
 
     if (typeof elapsedTime !== 'number') {
@@ -32,7 +32,7 @@ const ItemCard = props => {
             <View
                 style={{
                     ...styles.iconContainer,
-                    backgroundColor: Colors[title]
+                    backgroundColor: Colors[category]
                 }}>
                 <MaterialCommunityIcons
                     name={iconName}
@@ -42,7 +42,7 @@ const ItemCard = props => {
             </View>
             <View style={styles.content}>
                 <View>
-                    <DefaultText style={styles.title}>{title}</DefaultText>
+                    <DefaultText style={styles.category}>{category}</DefaultText>
                     <BoldText style={styles.elapsedTime}>
                         {hour}
                         <DefaultText style={styles.timeUnit}> hr</DefaultText>
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    title: {
+    category: {
         fontSize: 16,
         color: Colors.l2,
         marginBottom: 8,

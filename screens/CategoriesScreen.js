@@ -1,15 +1,15 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import ItemSummaryList from '../components/ItemSummaryList';
+import Category from '../components/CategoryList';
 
 const ItemLogScreen = props => {
-    const title = props.route.params.title;
+    const category = props.route.params.category;
 
 
     return (
         <View style={styles.screen}>
-            <ItemSummaryList title={title} />
+            <Category category={category} />
         </View>
     )
 }

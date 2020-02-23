@@ -37,7 +37,7 @@ describe('createLog', () => {
             store = storeFactory({});
         });
         test('Create a log', () => {
-            store.dispatch(createLog(log1.title, log1.startAt, log1.stopAt));
+            store.dispatch(createLog(log1.category, log1.startAt, log1.stopAt));
             const newState = store.getState().log;
 
             const expectedState = {
@@ -55,8 +55,8 @@ describe('createLog', () => {
         });
 
         test('Create 2 log in the same day', () => {
-            store.dispatch(createLog(log1.title, log1.startAt, log1.stopAt));
-            store.dispatch(createLog(log3.title, log3.startAt, log3.stopAt));
+            store.dispatch(createLog(log1.category, log1.startAt, log1.stopAt));
+            store.dispatch(createLog(log3.category, log3.startAt, log3.stopAt));
             const newState = store.getState().log;
 
             const expectedState = {
@@ -73,9 +73,9 @@ describe('createLog', () => {
             expect(newState).toEqual(expectedState);
         });
 
-        test('Create 2 log with different title in same day', () => {
-            store.dispatch(createLog(log1.title, log1.startAt, log1.stopAt));
-            store.dispatch(createLog(log2.title, log2.startAt, log2.stopAt));
+        test('Create 2 log with different category in same day', () => {
+            store.dispatch(createLog(log1.category, log1.startAt, log1.stopAt));
+            store.dispatch(createLog(log2.category, log2.startAt, log2.stopAt));
             const newState = store.getState().log;
 
             const expectedState = {
@@ -93,8 +93,8 @@ describe('createLog', () => {
         });
 
         test('Create 2 log in different days', () => {
-            store.dispatch(createLog(log1.title, log1.startAt, log1.stopAt));
-            store.dispatch(createLog(log4.title, log4.startAt, log4.stopAt));
+            store.dispatch(createLog(log1.category, log1.startAt, log1.stopAt));
+            store.dispatch(createLog(log4.category, log4.startAt, log4.stopAt));
             const newState = store.getState().log;
 
             const expectedState = {
