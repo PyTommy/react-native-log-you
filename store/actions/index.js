@@ -66,6 +66,34 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
         }
     };
 }
+
+
+/**
+ * Fetch specified summaries and set on redux store. 
+ * @param {string} isoDateFrom 
+ * @param {number} limit - Limit of data from SQL database.
+ */
+export const fetchSummariesWithLimit = (isoDateFrom, limit = 1) => {
+    // Validate params
+    if (!isoDateFrom || typeof isoDateFrom !== 'string') {
+        throw new Error('isoDate should be string');
+    }
+
+    return async dispatch => {
+        try {
+            const objectSummaries = await db.fetchSummariesWithLimit(isoDateFrom, limit);
+            dispatch({
+                type: actionTypes.SET_SUMMARIES,
+                payload: objectSummaries
+            })
+            return objectSummaries;
+        } catch (err) {
+            console.error(err);
+        }
+    };
+}
+
+
 /**
  * Fetch specified logs and set on redux store.
  * @param {string} isoDateFrom -

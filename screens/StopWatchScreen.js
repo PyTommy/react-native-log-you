@@ -54,8 +54,9 @@ const StopwatchScreen = props => {
         stopwatch.start(); // This reset and start stopwatch.
     };
 
-    const itemCategories = Object.keys(itemElapsedTimes).sort();
-    const startButtons = itemCategories.map(itemCategory => {
+    // Create <StartButton /> for each category.
+    const categories = Object.keys(itemElapsedTimes).sort();
+    const startButtons = categories.map(itemCategory => {
         const isItemActive = curActiveCategory === itemCategory;
 
         let elapsedTime = itemElapsedTimes[itemCategory];

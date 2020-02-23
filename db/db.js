@@ -65,7 +65,8 @@ export const insertLog = (category, isoDate, startAt, stopAt, elapsedTime) => {
 }
 
 /**
- * Returns promise that fetch summaries from database 
+ * Returns promise that fetch summaries from database.
+ * If there are no data in the specified duration, returns summaries with elapsed time equal 0 for each category.
  * @param {string} isoDateFrom - ISO formatted date  
  * @param {string} isoDateTo - ISO formatted date
  * @returns {object}
@@ -122,7 +123,72 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
 }
 
 /**
- * Fetch logs created specified period from SQL database
+ * Returns promise that fetch summaries from database.
+ * If there are no data, returns empty object.
+ * @param {string} isoDateFrom - ISO formatted date
+ * @param {string} isoDateTo - ISO formatted date
+ * @returns {object}
+ * Formatted as
+ * {
+ *  [dateISOString]: {
+ *      [category]: elapsedTime
+ *  }
+ * }
+ */
+export const fetchSummariesWithLimit = (isoDateFrom, limit = 1) => {
+    return new Promise((resolve, reject) => {
+        db.transaction(tx => {
+            tx.executeSql(
+                `
+                    SELECT isoDate, category, SUM(elapsedTime) AS elapsedTime FROM logs
+                    WHERE isoDate <= ?
+                    GROUP BY isoDate, category
+                    ORDER BY isoDate
+                    LIMIT ?;
+                `,
+                [isoDateFrom, limit],
+                (_, result) => {
+                    const resultArray = result.rows._array; // [{category, elapsedTime, isoDate}]
+
+                    // Extract unique isoDates
+                    const isoDatesMapped = resultArray.map(data => data.isoDate);
+                    const isoDatesSet = new Set(isoDatesMapped);
+                    const isoDates = Array.from(isoDatesSet);
+
+
+                    // set initialize summaries
+                    const summaries = {};
+                    isoDates.forEach(isoDate => {
+                        summaries[isoDate] = {
+                            Study: 0,
+                            Meditation: 0,
+                            Eating: 0,
+                            Sports: 0,
+                        };
+                    });
+
+                    resultArray.forEach((data) => {
+                        const { isoDate, category, elapsedTime } = data;
+
+                        summaries[isoDate] = {
+                            ...summaries[isoDate],
+                            [category]: summaries[isoDate][category] + elapsedTime
+                        };
+                    });
+
+                    resolve(summaries);
+                },
+                (_, err) => {
+                    reject(err);
+                }
+            );
+        });
+    })
+}
+
+/**
+ * Fetch logs created specified period from SQL database.
+ * If there are no data in the specified duration, returns empty arrays. EXAMPLE) logs: {[isoDate]: []}.
  * @param {string} isoDateFrom
  * @param {string} isoDateTo 
  */

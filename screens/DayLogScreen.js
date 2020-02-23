@@ -97,7 +97,7 @@ const DayLogScreen = props => {
                 />
                 <View style={styles.togglerContainer}>
                     <UIButton
-                        title={'Show Summary'}
+                        title={'Switch to Summary'}
                         width={150}
                         onPress={toggleShowLogs}
                         style={styles.toggler}
@@ -108,17 +108,19 @@ const DayLogScreen = props => {
         )
     } else {
         return (
-            <ScrollView style={styles.screen}>
-                <DaySummary summary={summary} navigation={props.navigation} />
+            <View style={styles.screen}>
+                <ScrollView>
+                    <DaySummary summary={summary} navigation={props.navigation} />
+                </ScrollView>
                 <View style={styles.togglerContainer}>
                     <UIButton
-                        title={'Show Logs'}
+                        title={'Switch to Logs'}
                         onPress={toggleShowLogs}
                         style={styles.toggler}
                         textColor={Colors.primary}
                         bold={true} />
                 </View>
-            </ScrollView>
+            </View>
         );
     };
 }

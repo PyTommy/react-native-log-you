@@ -24,10 +24,11 @@ const LogList = props => {
         logItems = (
             <FlatList
                 data={props.logs}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()} // not number!!
                 renderItem={({ item }) => (
                     <LogRow log={item} editing={editing} />
-                )} />
+                )}
+            />
         );
     }
 
