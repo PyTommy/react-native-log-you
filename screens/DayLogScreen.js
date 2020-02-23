@@ -9,26 +9,27 @@ import { fetchSummaries, fetchLogs } from '../store/actions/index';
 import DaySummary from '../components/DaySummary';
 import { IoniconsHeaderButton } from '../components/UI/HeaderButton';
 import LogList from '../components/LogList';
-import UIButton from '../components/UI/Button';
+import UIButtonOutline from '../components/UI/ButtonOutline';
 import Colors from '../constants/Colors';
 
 
 const DayLogScreen = props => {
-    const [showLogs, setShowLogs] = useState(false);
+    // Redux store 
     const logs = useSelector(state => state.logs); // {[isoDate]: [{log}]}
     const summaries = useSelector(state => state.summaries); // {[isoDate]: { summary }}
     const dispatch = useDispatch();
 
+    // Date related variables
     const today = dateGenerator(new Date());
     const isoToday = today.toISOString();
-
     const [selectedDate, setSelectedDate] = useState(today);
     const isoSelectedDate = selectedDate.toISOString();
-
     const selectedDateFormatted = isoToday === isoSelectedDate
         ? 'Today'
         : moment(selectedDate).format('YYYY/MM/DD');
 
+    // Showing Logs? Otherwise, Summaries displayed.
+    const [showLogs, setShowLogs] = useState(false);
     const switchDate = (next = true) => {
         setSelectedDate(prevState => {
             if (next) {
@@ -38,7 +39,6 @@ const DayLogScreen = props => {
             }
         });
     };
-
     const toggleShowLogs = () => {
         setShowLogs(prevState => !prevState);
     };
@@ -96,13 +96,9 @@ const DayLogScreen = props => {
                     isoSelectedDate={isoSelectedDate}
                 />
                 <View style={styles.togglerContainer}>
-                    <UIButton
+                    <UIButtonOutline
                         title={'Switch to Summary'}
-                        width={150}
-                        onPress={toggleShowLogs}
-                        style={styles.toggler}
-                        textColor={Colors.primary}
-                        bold={true} />
+                        onPress={toggleShowLogs} />
                 </View>
             </View>
         )
@@ -113,12 +109,9 @@ const DayLogScreen = props => {
                     <DaySummary summary={summary} navigation={props.navigation} />
                 </ScrollView>
                 <View style={styles.togglerContainer}>
-                    <UIButton
+                    <UIButtonOutline
                         title={'Switch to Logs'}
-                        onPress={toggleShowLogs}
-                        style={styles.toggler}
-                        textColor={Colors.primary}
-                        bold={true} />
+                        onPress={toggleShowLogs} />
                 </View>
             </View>
         );
@@ -134,14 +127,6 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         alignItems: 'center',
     },
-    toggler: {
-        width: 'auto',
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        backgroundColor: 'transparent',
-        borderColor: Colors.primary,
-        borderWidth: 1.5,
-    }
 })
 
 

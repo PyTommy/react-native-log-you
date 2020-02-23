@@ -6,7 +6,6 @@ import Category from '../components/CategoryList';
 const ItemLogScreen = props => {
     const category = props.route.params.category;
 
-
     return (
         <View style={styles.screen}>
             <Category category={category} />

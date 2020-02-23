@@ -3,7 +3,7 @@ import { View, FlatList, StyleSheet, ActivityIndicator } from 'react-native'
 
 import Colors from '../constants/Colors';
 import BoldText from './UI/BoldText';
-import UIButton from './UI/Button';
+import UIButtonOutline from './UI/ButtonOutline';
 import LogRow from './LogRow';
 import Centered from './UI/Center';
 
@@ -47,13 +47,11 @@ const LogList = props => {
         <View style={styles.LogList}>
             <View style={styles.header}>
                 <BoldText style={styles.headerTitle}>Log</BoldText>
-                <UIButton
+                <UIButtonOutline
                     title={editing ? 'Finish Editing' : 'EDIT'}
                     onPress={() => setEditing(prevState => !prevState)}
-                    height={25}
-                    width={'auto'}
-                    style={styles.editButton}
-                    textColor={Colors.l3}
+                    color={Colors.l3}
+                    fontSize={14}
                 />
             </View>
             {logItems}
@@ -76,12 +74,6 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 20,
         color: Colors.l2,
-    },
-    editButton: {
-        borderWidth: 1.5,
-        borderColor: Colors.l3,
-        backgroundColor: 'transparent',
-        paddingHorizontal: 10
     },
     notFound: {
         fontSize: 16,

@@ -7,7 +7,7 @@ import BoldText from './BoldText';
 import Colors from '../../constants/Colors';
 
 /**
- * Customized button component
+ * Customized button outlined component
  * @property {function} onPress
  * @property {string} title - button text
  * 
@@ -15,27 +15,34 @@ import Colors from '../../constants/Colors';
  * @property {object} style - style for the box.
  * @property {object} textStyle - style for the text.
  * @property {boolean} bold - font weight 
- * @property {string} color - background color 
+ * @property {string} color - border and text color 
+ * @property {number} borderWidth
  * @property {number} height - height of the box
  * @property {number} width - width of the box
- * @property {string} textColor - text color
+ * @property {number} paddingVertical
+ * @property {number} paddingHorizontal
  * @property {number} fontSize - font size
  */
-const Button = (props) => {
+const ButtonOutline = (props) => {
 
     const boxStyle = {
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingVertical: props.paddingVertical || 5,
+        paddingHorizontal: props.paddingHorizontal || 10,
 
-        backgroundColor: props.color || Colors.primary,
-        height: props.height || 35,
-        width: props.width || 100,
+        borderColor: props.color || Colors.primary,
+        borderWidth: props.borderWidth || 1.5,
         borderRadius: 3,
+
+        height: props.height || 'auto',
+        width: props.width || 'auto',
 
         ...props.style
     }
     const textStyle = {
-        color: props.textColor || 'white',
+        color: props.color || Colors.primary,
         fontSize: props.fontSize || 16,
 
         ...props.textStyle,
@@ -52,4 +59,4 @@ const Button = (props) => {
     )
 }
 
-export default Button
+export default ButtonOutline
