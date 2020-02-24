@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { View, TextInput } from 'react-native'
 
 import Colors from '../../constants/Colors';
@@ -40,10 +40,14 @@ const Input = (props) => {
         backgroundColor = Colors.l1,
         fontSize = 20,
         color = Colors.d4,
-        paddingHorizontal = 5,
+        paddingHorizontal = 10,
         paddingVertical = 10,
     } = props;
 
+    const textInput = useRef(null);
+    const containerClicked = () => {
+        textInput.current.focus();
+    };
 
     const textChangeHandler = text => {
         // Validity
@@ -72,13 +76,13 @@ const Input = (props) => {
 
     const styles = {
         formControl: {
-            alignItems: 'center',
-            justifyContent: 'start',
             borderRadius: 5,
             width: width,
             backgroundColor: backgroundColor,
         },
         input: {
+            textAlign: 'center',
+            width: '100%',
             fontSize: fontSize,
             paddingHorizontal: paddingHorizontal,
             paddingVertical: paddingVertical,
@@ -87,10 +91,12 @@ const Input = (props) => {
     };
 
     return (
-        <View style={{ ...styles.formControl }}>
+        <View style={{ ...styles.formControl }} onPress={containerClicked}>
             <TextInput
+                ref={textInput}
                 style={styles.input}
                 value={value}
+
                 onChangeText={textChangeHandler}
                 {...restTextInputProps}
             />

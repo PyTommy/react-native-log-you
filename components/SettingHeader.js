@@ -7,13 +7,13 @@ import BoldText from './UI/BoldText';
 import UIButtonText from '../components/UI/ButtonText';
 
 /**
- * @prop {boolean} isChanged - If settings changed. 
+ * @prop {boolean} saveButtonActive
  * @prop {function} onSave 
  */
 const SettingHeader = props => {
     const {
         onSave,
-        isChanged,
+        saveButtonActive,
     } = props;
 
 
@@ -21,7 +21,7 @@ const SettingHeader = props => {
         <BoldText style={styles.headerTitle}>Setting</BoldText>
     );
 
-    const rightComponent = isChanged ? (
+    const rightComponent = saveButtonActive ? (
         <UIButtonText
             style={styles.headerRight}
             title='SAVE'
