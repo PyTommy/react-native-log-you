@@ -253,7 +253,6 @@ export const deleteAllLogs = () => {
                 `DROP TABLE logs`,
                 [],
                 (_, result) => {
-                    console.log(result);
                     resolve();
                 },
                 (_, err) => {

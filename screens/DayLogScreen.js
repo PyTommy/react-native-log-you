@@ -55,7 +55,7 @@ const DayLogScreen = props => {
                     dispatch(fetchSummaries(isoSelectedDate));
                 }
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         };
         fetchData();

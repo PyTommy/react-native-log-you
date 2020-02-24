@@ -38,7 +38,6 @@ const ButtonText = (props) => {
 
         ...props.textStyle,
     }
-    console.log(props.title);
     return (
         <View style={{ alignItems: 'center' }}>
             <TouchableOpacity onPress={props.onPress} style={boxStyle}>

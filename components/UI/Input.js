@@ -47,8 +47,14 @@ const Input = (props) => {
 
     const textChangeHandler = text => {
         // Validity
+
         if (numeric != null) {
             text = text.replace(/[^0-9]/g, '');
+
+            // Remove 0 on the head. Example) '02' => '2'
+            if (text.match(/0[0-9]+/)) {
+                text = (+text).toString();
+            }
         }
         let isValid = true;
         if (required && text.trim().length === 0) {

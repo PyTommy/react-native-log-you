@@ -1,5 +1,7 @@
 import Log from '../../models/log';
 import * as db from '../../db/db';
+import { AsyncStorage } from 'react-native';
+
 
 export const actionTypes = {
     INCREMENT_TIME_SUMMARY: 'INCREMENT_TIME_SUMMARY',
@@ -8,6 +10,7 @@ export const actionTypes = {
     FETCH_LOGS: 'FETCH_LOGS',
     DELETE_LOG: 'DELETE_LOG',
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
+    SET_SETTINGS: 'SET_SETTINGS',
 };
 
 export const createLog = (category, startAt, stopAt) => {
@@ -154,6 +157,58 @@ export const deleteAllLogs = () => {
             // init redux store
         } catch (err) {
             console.error(err);
+        }
+    }
+};
+
+/**
+ * Setting created or updated
+ * @param {number} autoStop 
+ * @param {number} minTime 
+ */
+export const setSettings = (autoStop, minTime) => {
+    return async dispatch => {
+        if (typeof autoStop !== 'number') {
+            throw new Error('autoStop should be number')
+        };
+        if (typeof minTime !== 'number') {
+            throw new Error('minTime should be number')
+        };
+
+        const newSettings = {
+            autoStop: autoStop,
+            minTime: minTime
+        }
+
+        try {
+            await AsyncStorage.setItem('settings', JSON.stringify(newSettings));
+            dispatch({
+                type: actionTypes.SET_SETTINGS,
+                payload: newSettings
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+};
+
+/**
+ * Get settings and set on store. Conditionally, create and store settings.
+ */
+export const init = () => {
+    return async dispatch => {
+        try {
+            const jsonStoredSettings = await AsyncStorage.getItem('settings');
+            const storedSettings = JSON.parse(jsonStoredSettings);
+
+            if (storedSettings !== null) {
+                dispatch({
+                    type: actionTypes.SET_SETTINGS,
+                    payload: storedSettings
+                })
+            }
+        } catch (error) {
+            throw new Error('Init action failed!!')
         }
     }
 };

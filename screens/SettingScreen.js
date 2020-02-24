@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from 'react'
-import { Platform, View, StatusBar, StatusBarIOS, StyleSheet, Alert } from 'react-native'
-import { useDispatch } from 'react-redux';
+import { Platform, View, StatusBar, StyleSheet, Alert } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux';
 
-import { deleteAllLogs } from '../store/actions/index'
+import * as actions from '../store/actions/index'
 import UIButtonOutline from '../components/UI/ButtonOutline';
 import { ScrollView } from 'react-native-gesture-handler';
 import SettingWithText from '../components/SettingWithText';
@@ -11,17 +11,28 @@ import Colors from '../constants/Colors';
 
 const SettingScreen = props => {
     const dispatch = useDispatch();
+    const settingsStored = useSelector(state => state.settings);
 
     const [settings, setSettings] = useState({
         autoStop: {
-            value: '90',
+            value: settingsStored.autoStop.toString(),
             isValid: true,
         },
         minTime: {
-            value: '0',
+            value: settingsStored.minTime.toString(),
             isValid: true,
         }
     });
+
+
+    let isChanged = false;
+    const settingItemTitles = Object.keys(settings);
+    settingItemTitles.forEach(title => {
+        if (settings[title].value !== settingsStored[title].toString()) {
+            isChanged = true;
+        };
+    });
+
 
     const onChangeText = useCallback((identifier, value, isValid) => {
         setSettings(prevState => ({
@@ -34,7 +45,25 @@ const SettingScreen = props => {
     }, []);
 
     const onSaveHandler = () => {
-        console.log('onSave');
+        const settingTitles = Object.keys(settings);
+
+        let isValid = true;
+        settingTitles.forEach((title) => {
+            isValid = settings[title].isValid && isValid;
+        });
+
+        if (isValid) {
+            dispatch(actions.setSettings(
+                +settings.autoStop.value,
+                +settings.minTime.value
+            ));
+        } else {
+            Alert.alert(
+                'Invalid',
+                "You need to fill settings with valid inputs.",
+                [{ text: 'OK' }]
+            );
+        }
     };
 
     const onDeleteAllHandler = () => {
@@ -45,7 +74,7 @@ const SettingScreen = props => {
                 { text: 'CANCEL', style: 'cancel' },
                 {
                     text: 'YES', onPress: () => {
-                        dispatch(deleteAllLogs());
+                        dispatch(actions.deleteAllLogs());
                         props.navigation.navigate('Stopwatch');
                     },
                     style: 'destructive'
@@ -58,7 +87,7 @@ const SettingScreen = props => {
 
     return (
         <View style={styles.screen}>
-            <SettingHeader onSave={onSaveHandler} />
+            <SettingHeader onSave={onSaveHandler} isChanged={isChanged} />
             <ScrollView contentContainerStyle={styles.container}>
                 <SettingWithText
                     title='Auto Stop'
@@ -90,7 +119,7 @@ const SettingScreen = props => {
                     restTextInputProps={{
                         placeholder: 'min(s)',
                         keyboardType: 'number-pad',
-                        maxLength: 3,
+                        maxLength: 2,
                     }}
                 />
                 <UIButtonOutline

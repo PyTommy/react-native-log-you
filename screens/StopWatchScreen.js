@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { View, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native'
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import useStopwatch from '../hooks/useStopwatch';
 import { secondToStringHHMMSSArray } from '../utils/convertSecond';
@@ -8,75 +8,41 @@ import BoldText from '../components/UI/BoldText';
 import UIButton from '../components/UI/Button';
 import StartButton from '../components/StartButton';
 import Colors from '../constants/Colors';
-import { createLog, fetchSummaries } from '../store/actions/index';
 import { dateGenerator } from '../utils/dateGenerator';
 
 const StopwatchScreen = props => {
     const stopwatch = useStopwatch();
-    const [curActiveCategory, setCurActiveCategory] = useState(null);
-    const [waitingSavedTime, setWaitingSavedTime] = useState({}); // used to add elapsedTime for an item while waiting async action creating new log on SQLite and redux store. (Example: { Study : 3600 })
     const summaries = useSelector(state => state.summaries);
-    const dispatch = useDispatch();
 
     const todayISOString = dateGenerator(new Date()).toISOString();
-    useEffect(() => {
-        dispatch(fetchSummaries(todayISOString));
-    }, []);
 
-    const itemElapsedTimes = summaries[todayISOString]
+    const todayElapsedTimes = summaries[todayISOString]
         ? summaries[todayISOString]
         : { Study: 0, Meditation: 0, Sports: 0, Eating: 0 };
 
-    const resetStopwatchHandler = () => {
-        setCurActiveCategory(() => null);
-        stopwatch.reset();
-    }
-
-    const saveLogHandler = async () => {
-        setWaitingSavedTime(() => ({
-            [curActiveCategory]: stopwatch.elapsedTime
-        }));
-        await dispatch(createLog(curActiveCategory, stopwatch.startAt, new Date()));
-        setWaitingSavedTime(() => ({}));
-    }
-
-    const saveAndResetStopwatch = () => {
-        if (!curActiveCategory) return;
-        saveLogHandler();
-        resetStopwatchHandler();
-    };
-
-    const startStopwatchHandler = (selectedCategory) => { // Async ??
-        if (curActiveCategory === selectedCategory) return;
-
-        if (curActiveCategory) saveLogHandler();
-        setCurActiveCategory(() => selectedCategory);
-        stopwatch.start(); // This reset and start stopwatch.
-    };
 
     // Create <StartButton /> for each category.
-    const categories = Object.keys(itemElapsedTimes).sort();
-    const startButtons = categories.map(itemCategory => {
-        const isItemActive = curActiveCategory === itemCategory;
+    const categories = Object.keys(todayElapsedTimes).sort();
 
-        let elapsedTime = itemElapsedTimes[itemCategory];
-        if (isItemActive) {
+    const startButtons = categories.map(category => {
+        const isCategoryActive = stopwatch.activeCategory === category;
+
+        let elapsedTime = todayElapsedTimes[category];
+        if (isCategoryActive) {
             elapsedTime += stopwatch.elapsedTime;
         }
-        elapsedTime += waitingSavedTime[itemCategory] || 0;
+        elapsedTime += stopwatch.waitingSavedTime[category] || 0;
 
         return (
             <StartButton
-                key={itemCategory}
-                category={itemCategory}
-                onPress={() => startStopwatchHandler(itemCategory)}
+                key={category}
+                category={category}
+                onPress={() => stopwatch.start(category)}
                 elapsedTime={elapsedTime}
-                active={isItemActive}
+                active={isCategoryActive}
             />
         );
     });
-
-
 
     return (
         <SafeAreaView style={styles.screen}>
@@ -92,13 +58,13 @@ const StopwatchScreen = props => {
                 <UIButton
                     title="SAVE"
                     color={Colors.success}
-                    onPress={saveAndResetStopwatch}
+                    onPress={stopwatch.saveAndReset}
                     style={{ marginRight: 30 }}
                 />
                 <UIButton
                     title="DISMISS"
                     color={Colors.danger}
-                    onPress={resetStopwatchHandler} />
+                    onPress={stopwatch.reset} />
             </View>
         </SafeAreaView>
     )

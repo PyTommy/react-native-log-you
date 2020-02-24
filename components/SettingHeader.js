@@ -3,17 +3,17 @@ import { TouchableOpacity, StyleSheet } from 'react-native'
 
 import Header from './UI/CustomHeader';
 import Colors from '../constants/Colors';
-import DefaultText from './UI/DefaultText';
 import BoldText from './UI/BoldText';
 import UIButtonText from '../components/UI/ButtonText';
 
 /**
- * 
+ * @prop {boolean} isChanged - If settings changed. 
  * @prop {function} onSave 
  */
 const SettingHeader = props => {
     const {
-        onSave
+        onSave,
+        isChanged,
     } = props;
 
 
@@ -21,14 +21,14 @@ const SettingHeader = props => {
         <BoldText style={styles.headerTitle}>Setting</BoldText>
     );
 
-    const rightComponent = (
+    const rightComponent = isChanged ? (
         <UIButtonText
             style={styles.headerRight}
             title='SAVE'
             fontSize={19}
             onPress={onSave}
         />
-    );
+    ) : null;
 
     return (
         <Header

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Provider } from 'react-redux';
+import InitApp from './InitAppComponent';
 
 import store from './store/configStore';
 import * as db from './db/db';
@@ -14,8 +15,9 @@ db.init()
   })
   .catch(err => {
     console.log('Initializing db failed.');
-    console.log(err);
+    console.error(err);
   });
+
 
 export default function App() {
   const [fontLoaded, setFontLoaded] = useState(false);
@@ -27,6 +29,7 @@ export default function App() {
     });
   };
 
+
   if (!fontLoaded) {
     return (
       <AppLoading
@@ -36,8 +39,12 @@ export default function App() {
     );
   }
 
+
+
+
   return (
     <Provider store={store}>
+      <InitApp />
       <AppNavigator />
     </Provider>
   );
