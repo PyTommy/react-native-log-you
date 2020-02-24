@@ -44,6 +44,8 @@ const SettingWithText = props => {
             <View style={styles.inputContainer}>
                 <BoldText style={styles.title}>{title}</BoldText>
                 <Input
+                    backgroundColor={Colors.l2}
+                    color={Colors.d2}
                     value={value}
                     identifier={identifier}
                     onChangeText={onChangeText}
@@ -52,7 +54,7 @@ const SettingWithText = props => {
                     numeric={numeric}
                     min={min}
                     max={max}
-                    restTextInputProps={restTextInputProps}
+                    restTextInputProps={{ placeholderTextColor: '#666', ...restTextInputProps }}
                 />
             </View>
             {isValid ? (
@@ -74,13 +76,14 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         padding: 15,
-        backgroundColor: Colors.d3,
+        backgroundColor: Colors.d2,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
     title: {
         fontSize: 25,
+        color: Colors.l2,
     },
     explanation: {
         paddingVertical: 3,
