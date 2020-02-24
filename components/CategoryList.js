@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { FlatList, View, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { dateGenerator } from '../utils/dateGenerator';
 import { fetchSummariesWithLimit } from '../store/actions/index';
 import CategoryCard from './CategoryCard';
 import NotFound from './UI/NotFound';
@@ -13,13 +14,17 @@ const ItemSummaryList = props => {
     const summaries = useSelector(state => state.summaries);
     const isoDates = Object.keys(summaries).sort((a, b) => b - a); // newer => older
 
+    const isoToday = dateGenerator(new Date()).toISOString();
+
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const nextFetchedISODate = isoDates[isoDates.length - 1];
 
     const loadMore = async () => {
+        console.log('loadMore start');
         if (!hasMore || loading) return;
+        console.log('loadMore continued');
 
         try {
             const limit = 15;
@@ -51,6 +56,7 @@ const ItemSummaryList = props => {
     });
 
     if (data.length === 0) {
+        loadMore(); // Should be done when <FlatList/> not rendered (loadMore won't be executed) but there are logs in previous days.
         return <NotFound>No record found</NotFound>;
     }
 
