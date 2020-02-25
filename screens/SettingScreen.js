@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from 'react'
-import { View, ScrollView, TouchableWithoutFeedback, Alert, StyleSheet, Keyboard } from 'react-native'
+import React, { useState, useCallback, useEffect } from 'react'
+import { View, ScrollView, Alert, StyleSheet, Keyboard } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as actions from '../store/actions/index'
@@ -12,6 +12,7 @@ const SettingScreen = props => {
     const dispatch = useDispatch();
     const settingsStored = useSelector(state => state.settings);
 
+
     const [settings, setSettings] = useState({
         autoStop: {
             value: settingsStored.autoStop.toString(),
@@ -22,6 +23,7 @@ const SettingScreen = props => {
             isValid: true,
         }
     });
+
 
     const onChangeText = useCallback((identifier, value, isValid) => {
         setSettings(prevState => ({
@@ -59,7 +61,7 @@ const SettingScreen = props => {
                 { text: 'CANCEL', style: 'cancel' },
                 {
                     text: 'YES', onPress: () => {
-                        dispatch(actions.deleteAllLogs());
+                        dispatch(actions.deleteAllData());
                         props.navigation.navigate('Stopwatch');
                     },
                     style: 'destructive'

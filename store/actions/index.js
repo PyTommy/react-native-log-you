@@ -78,7 +78,7 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
  * @param {string} lastFetchedIOSDate
  * @param {number} limit - Limit of data from SQL database.
  */
-export const fetchSummariesWithLimit = (lastFetchedIOSDate, limit = 1) => {
+export const fetchSummariesWithLimit = (lastFetchedIOSDate, limit = 50) => {
     // Validate params
     if (!lastFetchedIOSDate || typeof lastFetchedIOSDate !== 'string') {
         throw new Error('isoDate should be string');
@@ -86,12 +86,15 @@ export const fetchSummariesWithLimit = (lastFetchedIOSDate, limit = 1) => {
 
     return async dispatch => {
         try {
-            const objectSummaries = await db.fetchSummariesWithLimit(lastFetchedIOSDate, limit);
+            const { summaries, hasMore } = await db.fetchSummariesWithLimit(lastFetchedIOSDate, limit);
             dispatch({
                 type: actionTypes.SET_SUMMARIES,
-                payload: objectSummaries
+                payload: summaries
             })
-            return objectSummaries;
+
+            console.log('Action', hasMore)
+
+            return hasMore;
         } catch (err) {
             console.error(err);
         }

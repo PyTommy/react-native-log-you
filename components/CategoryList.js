@@ -1,35 +1,58 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FlatList, View, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { fetchSummariesWithLimit } from '../store/actions/index';
+import { fetchSummariesWithLimit, fetchSummaries } from '../store/actions/index';
 import CategoryCard from './CategoryCard';
 import NotFound from './UI/NotFound';
 import Colors from '../constants/Colors';
+import Center from '../components/UI/Center';
 
 const ItemSummaryList = props => {
     const category = props.category;
 
     const summaries = useSelector(state => state.summaries);
-    const isoDates = Object.keys(summaries).sort((a, b) => b - a); // newer => older
-
+    const isoDates = Object.keys(summaries).sort((a, b) => new Date(b) - new Date(a)); // newer => older
     const dispatch = useDispatch();
+    const [loadingBetweens, setLoadingBetweens] = useState(true);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const nextFetchedISODate = isoDates[isoDates.length - 1];
+
+    const fetchedFirstISODate = isoDates[0];
+    const fetchedLastISODate = isoDates[isoDates.length - 1];
+    console.log('[CategoryList.js] fetchedLastISODate: ', fetchedLastISODate);
+    console.log('[CategoryList.js] hasMore: ', hasMore);
+
+    // 穴埋め作業
+    useEffect(() => {
+        const days = (new Date(fetchedFirstISODate) - new Date(fetchedLastISODate)) / 24 * 60 * 60 * 1000 - 1;
+        const isThereNotLoadedDaysBetween = isoDates.length < days;
+
+        if (isThereNotLoadedDaysBetween) {
+            const asyncFunc = async () => {
+                try {
+                    await dispatch(fetchSummaries(fetchedLastISODate, fetchedFirstISODate));
+                } catch (err) {
+                    console.error(err);
+                }
+                setLoadingBetweens(() => false);
+            }
+            asyncFunc();
+        } else {
+            setLoadingBetweens(() => false);
+        }
+    }, []);
 
     const loadMore = async () => {
         if (!hasMore || loading) return;
 
         try {
-            const limit = 15;
             setLoading(true);
-            const fetchedSummaries = await dispatch(fetchSummariesWithLimit(nextFetchedISODate, limit));
+            const newHasMore = await dispatch(fetchSummariesWithLimit(fetchedLastISODate));
             setLoading(false);
-            const fetchedISODatesArray = Object.keys(fetchedSummaries)
-                .sort((a, b) => b - a); // newer => older
-            if (fetchedISODatesArray.length < limit) {
-                setHasMore(() => false);
+
+            if (!newHasMore) {
+                setHasMore(false);
             }
 
         } catch (err) {
@@ -50,6 +73,18 @@ const ItemSummaryList = props => {
         });
     });
 
+
+    if (loadingBetweens) {
+        return (
+            <Center>
+                <ActivityIndicator
+                    size={30}
+                    style={{ margin: 15 }}
+                />
+            </Center>
+        );
+    };
+
     if (data.length === 0) {
         loadMore(); // Should be done when <FlatList/> not rendered (loadMore won't be executed) but there are logs in previous days.
         return <NotFound>No record found</NotFound>;
@@ -69,9 +104,8 @@ const ItemSummaryList = props => {
                         />
                     );
                 }}
-                ListFooterComponent={loading && (
+                ListFooterComponent={hasMore && (
                     <ActivityIndicator
-                        color={Colors.primary}
                         size={30}
                         style={{ margin: 15 }}
                     />

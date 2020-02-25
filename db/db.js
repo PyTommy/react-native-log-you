@@ -111,7 +111,7 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
                             [category]: summaries[isoDate][category] + elapsedTime
                         };
                     });
-
+                    console.log(summaries);
                     resolve(summaries);
                 },
                 (_, err) => {
@@ -129,13 +129,13 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
  * @param {string} isoDateTo - ISO formatted date
  * @returns {object}
  * Formatted as
- * {
+ * summa{
  *  [dateISOString]: {
  *      [category]: elapsedTime
  *  }
  * }
  */
-export const fetchSummariesWithLimit = (isoDateFrom, limit = 1) => {
+export const fetchSummariesWithLimit = (lastFetchedIOSDate, limit = 50) => {
     return new Promise((resolve, reject) => {
         db.transaction(tx => {
             tx.executeSql(
@@ -143,18 +143,29 @@ export const fetchSummariesWithLimit = (isoDateFrom, limit = 1) => {
                     SELECT isoDate, category, SUM(elapsedTime) AS elapsedTime FROM logs
                     WHERE isoDate <= ?
                     GROUP BY isoDate, category
-                    ORDER BY isoDate
-                    LIMIT ?;
+                    ORDER BY isoDate DESC
+                    LIMIT ?
                 `,
-                [isoDateFrom, limit],
+                [lastFetchedIOSDate, limit],
                 (_, result) => {
+
                     const resultArray = result.rows._array; // [{category, elapsedTime, isoDate}]
+                    console.log('[db] result:', resultArray);
+
+                    const hasMore = resultArray.length === limit;
 
                     // Extract unique isoDates
                     const isoDatesMapped = resultArray.map(data => data.isoDate);
-                    const isoDatesSet = new Set(isoDatesMapped);
-                    const isoDates = Array.from(isoDatesSet);
-
+                    const oldestLoadedISODate = isoDatesMapped[isoDatesMapped.length - 1];
+                    const isoDates = isoDatesBetween(oldestLoadedISODate, lastFetchedIOSDate);
+                    // console.log('======================')
+                    // console.log(' Start')
+                    // console.log('======================')
+                    // console.log('===lastFecthdDate===\n', lastFetchedIOSDate);
+                    // console.log('===result===\n', resultArray);
+                    // console.log('===isoDatesBetween===\n', isoDates);
+                    // console.log('===oldestLoadedISODate===\n', oldestLoadedISODate)
+                    // console.log('===lastFetchedIOSDate===\n', lastFetchedIOSDate)
 
                     // set initialize summaries
                     const summaries = {};
@@ -166,17 +177,17 @@ export const fetchSummariesWithLimit = (isoDateFrom, limit = 1) => {
                             Sports: 0,
                         };
                     });
+                    // console.log('===Summaries===\n', summaries)
 
                     resultArray.forEach((data) => {
                         const { isoDate, category, elapsedTime } = data;
-
                         summaries[isoDate] = {
                             ...summaries[isoDate],
-                            [category]: summaries[isoDate][category] + elapsedTime
+                            [category]: elapsedTime
                         };
                     });
 
-                    resolve(summaries);
+                    resolve({ summaries, hasMore });
                 },
                 (_, err) => {
                     reject(err);
