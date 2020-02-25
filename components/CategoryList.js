@@ -5,33 +5,31 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchSummariesWithLimit, fetchSummaries } from '../store/actions/index';
 import CategoryCard from './CategoryCard';
 import NotFound from './UI/NotFound';
-import Colors from '../constants/Colors';
 import Center from '../components/UI/Center';
 
 const ItemSummaryList = props => {
     const category = props.category;
 
     const summaries = useSelector(state => state.summaries);
-    const isoDates = Object.keys(summaries).sort((a, b) => new Date(b) - new Date(a)); // newer => older
+    const isoDates = Object.keys(summaries).sort((a, b) => new Date(b) - new Date(a)); // newest => oldest
     const dispatch = useDispatch();
     const [loadingBetweens, setLoadingBetweens] = useState(true);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
-    const fetchedFirstISODate = isoDates[0];
-    const fetchedLastISODate = isoDates[isoDates.length - 1];
-    console.log('[CategoryList.js] fetchedLastISODate: ', fetchedLastISODate);
-    console.log('[CategoryList.js] hasMore: ', hasMore);
+    const newestISODate = isoDates[0];
+    const oldestISODate = isoDates[isoDates.length - 1];
 
-    // 穴埋め作業
+    // When component did mount, if some dates missing in the existing summary, fetch them.
+    // Example) {'01/01':{...}, '01/03':{...}} => {'01/01':{...}, '01/02':{...}, '01/03':{...}}
     useEffect(() => {
-        const days = (new Date(fetchedFirstISODate) - new Date(fetchedLastISODate)) / 24 * 60 * 60 * 1000 - 1;
+        const days = (new Date(newestISODate) - new Date(oldestISODate)) / 24 * 60 * 60 * 1000 - 1;
         const isThereNotLoadedDaysBetween = isoDates.length < days;
 
         if (isThereNotLoadedDaysBetween) {
             const asyncFunc = async () => {
                 try {
-                    await dispatch(fetchSummaries(fetchedLastISODate, fetchedFirstISODate));
+                    await dispatch(fetchSummaries(oldestISODate, newestISODate));
                 } catch (err) {
                     console.error(err);
                 }
@@ -43,12 +41,13 @@ const ItemSummaryList = props => {
         }
     }, []);
 
+
     const loadMore = async () => {
         if (!hasMore || loading) return;
 
         try {
             setLoading(true);
-            const newHasMore = await dispatch(fetchSummariesWithLimit(fetchedLastISODate));
+            const newHasMore = await dispatch(fetchSummariesWithLimit(oldestISODate));
             setLoading(false);
 
             if (!newHasMore) {
@@ -63,9 +62,10 @@ const ItemSummaryList = props => {
         };
     };
 
+    // Data should be rendered (elapsed time > 0). Formatted as [{isoDate, elapsedTime}]
     const data = [];
     isoDates.forEach(isoDate => {
-        if (summaries[isoDate][category] <= 0) return null; // No need to render if elapsedTime === 0
+        if (summaries[isoDate][category] === 0) return null;
 
         data.push({
             isoDate,
@@ -73,7 +73,7 @@ const ItemSummaryList = props => {
         });
     });
 
-
+    // Show Loading spinner
     if (loadingBetweens) {
         return (
             <Center>

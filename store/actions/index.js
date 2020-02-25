@@ -75,24 +75,23 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
 
 /**
  * Fetch specified summaries and set on redux store. 
- * @param {string} lastFetchedIOSDate
+ * @param {string} oldestStoredISODate
  * @param {number} limit - Limit of data from SQL database.
  */
-export const fetchSummariesWithLimit = (lastFetchedIOSDate, limit = 50) => {
+export const fetchSummariesWithLimit = (oldestStoredISODate, limit = 50) => {
     // Validate params
-    if (!lastFetchedIOSDate || typeof lastFetchedIOSDate !== 'string') {
+    if (!oldestStoredISODate || typeof oldestStoredISODate !== 'string') {
         throw new Error('isoDate should be string');
     }
 
     return async dispatch => {
         try {
-            const { summaries, hasMore } = await db.fetchSummariesWithLimit(lastFetchedIOSDate, limit);
+            const { summaries, hasMore } = await db.fetchSummariesWithLimit(oldestStoredISODate, limit);
             dispatch({
                 type: actionTypes.SET_SUMMARIES,
                 payload: summaries
             })
 
-            console.log('Action', hasMore)
 
             return hasMore;
         } catch (err) {
@@ -218,7 +217,7 @@ export const deleteAllData = () => {
             await db.deleteAllLogs();
             await AsyncStorage.removeItem('settings');
             await dispatch({
-                type: CLEAR_STORE
+                type: actionTypes.CLEAR_STORE
             })
 
             // Initialize data
