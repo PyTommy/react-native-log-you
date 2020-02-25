@@ -1,6 +1,8 @@
 import { actionTypes } from '../actions';
 
-const logReducer = (state = {}, actions) => {
+const initialState = {};
+
+const logReducer = (state = initialState, actions) => {
     const { type, payload } = actions;
     switch (type) {
         case actionTypes.ADD_LOG:
@@ -33,6 +35,8 @@ const logReducer = (state = {}, actions) => {
                 ...state,
                 [isoDate]: updatedLogs
             }
+        case actionTypes.CLEAR_STORE:
+            return initialState;
         default:
             return state;
     }

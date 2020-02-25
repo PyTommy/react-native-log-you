@@ -1,6 +1,8 @@
 import { actionTypes } from '../actions';
 
-const summaryReducer = (state = {}, actions) => {
+const initialState = {};
+
+const summaryReducer = (state = initialState, actions) => {
     const { type, payload } = actions;
 
     switch (type) {
@@ -39,6 +41,8 @@ const summaryReducer = (state = {}, actions) => {
                     [category]: state[isoDate][category] - elapsedTime
                 }
             }
+        case actionTypes.CLEAR_STORE:
+            return initialState;
         default:
             return state;
     }

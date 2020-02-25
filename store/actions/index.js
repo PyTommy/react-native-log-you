@@ -1,6 +1,7 @@
 import Log from '../../models/log';
 import * as db from '../../db/db';
 import { AsyncStorage } from 'react-native';
+import { dateGenerator } from '../../utils/dateGenerator';
 
 
 export const actionTypes = {
@@ -11,6 +12,7 @@ export const actionTypes = {
     DELETE_LOG: 'DELETE_LOG',
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
     SET_SETTINGS: 'SET_SETTINGS',
+    CLEAR_STORE: 'CLEAR_STORE'
 };
 
 export const createLog = (category, startAt, stopAt) => {
@@ -73,18 +75,18 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
 
 /**
  * Fetch specified summaries and set on redux store. 
- * @param {string} isoDateFrom 
+ * @param {string} lastFetchedIOSDate
  * @param {number} limit - Limit of data from SQL database.
  */
-export const fetchSummariesWithLimit = (isoDateFrom, limit = 1) => {
+export const fetchSummariesWithLimit = (lastFetchedIOSDate, limit = 1) => {
     // Validate params
-    if (!isoDateFrom || typeof isoDateFrom !== 'string') {
+    if (!lastFetchedIOSDate || typeof lastFetchedIOSDate !== 'string') {
         throw new Error('isoDate should be string');
     }
 
     return async dispatch => {
         try {
-            const objectSummaries = await db.fetchSummariesWithLimit(isoDateFrom, limit);
+            const objectSummaries = await db.fetchSummariesWithLimit(lastFetchedIOSDate, limit);
             dispatch({
                 type: actionTypes.SET_SUMMARIES,
                 payload: objectSummaries
@@ -147,19 +149,6 @@ export const deleteLog = (selectedLog) => {
     }
 }
 
-/**
- * Delete All log data from SQL database and redux store 
- */
-export const deleteAllLogs = () => {
-    return async dispatch => {
-        try {
-            await db.deleteAllLogs();
-            // init redux store
-        } catch (err) {
-            console.error(err);
-        }
-    }
-};
 
 /**
  * Setting created or updated
@@ -197,18 +186,42 @@ export const setSettings = (autoStop, minTime) => {
  */
 export const init = () => {
     return async dispatch => {
+        const isoToday = dateGenerator(new Date()).toISOString();
         try {
             const jsonStoredSettings = await AsyncStorage.getItem('settings');
             const storedSettings = JSON.parse(jsonStoredSettings);
-
             if (storedSettings !== null) {
                 dispatch({
                     type: actionTypes.SET_SETTINGS,
                     payload: storedSettings
                 })
             }
+            dispatch(fetchSummaries(isoToday));
+            dispatch(fetchLogs(isoToday));
         } catch (error) {
-            throw new Error('Init action failed!!')
+            console.log('Init action failed!!');
+            console.error(error);
+        }
+    }
+};
+
+/**
+ * Delete All data from SQL database, AsyncStorage and redux store 
+ */
+export const deleteAllData = () => {
+    return async dispatch => {
+        try {
+
+            await db.deleteAllLogs();
+            await AsyncStorage.removeItem('settings');
+            await dispatch({
+                type: CLEAR_STORE
+            })
+
+            // Initialize data
+            dispatch(init());
+        } catch (err) {
+            console.error(err);
         }
     }
 };

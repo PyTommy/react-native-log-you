@@ -13,6 +13,8 @@ const settingsReducer = (state = initialState, actions) => {
             return {
                 ...payload,
             }
+        case actionTypes.CLEAR_STORE:
+            return initialState;
         default:
             return state;
     }
