@@ -110,7 +110,7 @@ const useStopwatch = () => {
                         new Date(startAt.getTime() + settings.autoStop * 60 * 1000)
                     ));
                 } catch (err) {
-                    console.error(err);
+                    console.log(err);
                 }
 
                 setWaitingSavedTime(() => ({}));

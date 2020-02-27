@@ -153,6 +153,10 @@ export const fetchSummariesWithLimit = (oldestStoredISODate, limit = 50) => {
                     const resultArray = result.rows._array; // [{category, elapsedTime, isoDate}]
                     const hasMore = resultArray.length === limit;
 
+                    if (resultArray.length === 0) {
+                        return resolve({ summaries: {}, hasMore });
+                    }
+
                     // Create array of iso date.
                     const oldestFetchedISODate = resultArray[resultArray.length - 1].isoDate;
                     const isoDates = isoDatesBetween(oldestFetchedISODate, oldestStoredISODate);

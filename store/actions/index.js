@@ -1,3 +1,5 @@
+import uuid from 'uuid';
+
 import Log from '../../models/log';
 import * as db from '../../db/db';
 import { AsyncStorage } from 'react-native';
@@ -5,6 +7,8 @@ import { dateGenerator } from '../../utils/dateGenerator';
 
 
 export const actionTypes = {
+    SET_ALERT: 'SET_ALERT',
+    REMOVE_ALERT: 'REMOVE_ALERT',
     INCREMENT_TIME_SUMMARY: 'INCREMENT_TIME_SUMMARY',
     ADD_LOG: 'ADD_LOG',
     SET_SUMMARIES: 'SET_SUMMARIES',
@@ -12,7 +16,26 @@ export const actionTypes = {
     DELETE_LOG: 'DELETE_LOG',
     DELETE_ALL_LOG: 'DELETE_ALL_LOG',
     SET_SETTINGS: 'SET_SETTINGS',
-    CLEAR_STORE: 'CLEAR_STORE'
+    CLEAR_STORE: 'CLEAR_STORE',
+};
+
+/**
+ * Set alert. (<App/> component take care showing view and removing alert.)
+ * @param {string} name - customized or name which is an instance of Error.
+ * @param {string} message - customized or message which is an instance of Error.
+ * @param {string} alertType -"success" (green), "warning" (orange), "danger" (red), "info" (blue) and "default" (gray)
+ */
+export const setAlert = (name = 'Error', message = 'Something Wrong', type = "danger") => dispatch => {
+    const id = uuid.v4();
+    dispatch({
+        type: actionTypes.SET_ALERT,
+        payload: {
+            id,
+            name,
+            message,
+            type
+        }
+    });
 };
 
 export const createLog = (category, startAt, stopAt) => {
@@ -39,6 +62,7 @@ export const createLog = (category, startAt, stopAt) => {
                 })
         } catch (err) {
             console.error(err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
 
     }
@@ -68,6 +92,8 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
             })
         } catch (err) {
             console.error(err);
+
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
     };
 }
@@ -79,6 +105,7 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
  * @param {number} limit - Limit of data from SQL database.
  */
 export const fetchSummariesWithLimit = (oldestStoredISODate, limit = 50) => {
+
     // Validate params
     if (!oldestStoredISODate || typeof oldestStoredISODate !== 'string') {
         throw new Error('isoDate should be string');
@@ -95,7 +122,8 @@ export const fetchSummariesWithLimit = (oldestStoredISODate, limit = 50) => {
 
             return hasMore;
         } catch (err) {
-            console.error(err);
+            console.error('[actions/index.js] fetchSummaries\n', err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
     };
 }
@@ -126,6 +154,7 @@ export const fetchLogs = (isoDateFrom, isoDateTo) => {
 
         } catch (err) {
             console.error(err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
     };
 }
@@ -146,6 +175,7 @@ export const deleteLog = (selectedLog) => {
             })
         } catch (err) {
             console.error(err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
 
     }
@@ -177,8 +207,9 @@ export const setSettings = (autoStop, minTime) => {
                 type: actionTypes.SET_SETTINGS,
                 payload: newSettings
             })
-        } catch (error) {
-            console.error(error);
+        } catch (err) {
+            console.error(err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
     }
 };
@@ -200,9 +231,10 @@ export const init = () => {
             }
             dispatch(fetchSummaries(isoToday));
             dispatch(fetchLogs(isoToday));
-        } catch (error) {
-            console.log('Init action failed!!');
-            console.error(error);
+        } catch (err) {
+            console.error('Init action failed!!');
+            console.error(err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
     }
 };
@@ -224,6 +256,8 @@ export const deleteAllData = () => {
             dispatch(init());
         } catch (err) {
             console.error(err);
+            dispatch(setAlert(err.name, err.message, 'danger'));
         }
     }
 };
+

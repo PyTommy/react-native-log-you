@@ -21,7 +21,7 @@ const LogItem = props => {
                     await dispatch(deleteLog(props.log));
                 } catch (err) {
                     setDeleting(() => false);
-                    console.error(err);
+                    console.log(err);
                 }
             };
             asyncFunc();

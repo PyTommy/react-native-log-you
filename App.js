@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState, } from 'react';
+import { View } from 'react-native';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
 import { Provider } from 'react-redux';
-import InitApp from './InitAppComponent';
+import FlashMessage from "react-native-flash-message";
 
-import store from './store/configStore';
+
+
 import * as db from './db/db';
+import store from './store/configStore';
 import AppNavigator from './navigation/AppNavigator';
+import InitApp from './InitAppComponent';
+import ErrorHandler from './ErrorHandler';
 
 db.init()
   .then(() => {
@@ -41,20 +45,15 @@ export default function App() {
 
 
 
-
   return (
-    <Provider store={store}>
-      <InitApp />
-      <AppNavigator />
-    </Provider>
+    <View style={{ flex: 1 }}>
+      <Provider store={store}>
+        <InitApp />
+        <AppNavigator />
+        <ErrorHandler />
+        <FlashMessage position="top" />
+      </Provider>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#202020',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

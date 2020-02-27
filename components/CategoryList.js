@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { FlatList, View, ActivityIndicator } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
 
 import { fetchSummariesWithLimit, fetchSummaries } from '../store/actions/index';
 import CategoryCard from './CategoryCard';
 import NotFound from './UI/NotFound';
 import Center from '../components/UI/Center';
+
 
 const ItemSummaryList = props => {
     const category = props.category;
@@ -61,6 +64,8 @@ const ItemSummaryList = props => {
             // @@@ setError and show error message on screen!!
         };
     };
+
+
 
     // Data should be rendered (elapsed time > 0). Formatted as [{isoDate, elapsedTime}]
     const data = [];
