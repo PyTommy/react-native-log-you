@@ -19,7 +19,7 @@ Technologies used are
   <li>SQLite</li>
  </ul>
 
-You can this application on [Google Play](https://www.google.com).
+You can download this application on [Google Play](https://www.google.com).
 (I did not uploaded on App Store because I do not have Mac)
 <br/>
 <div>
