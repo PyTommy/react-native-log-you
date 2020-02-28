@@ -1,21 +1,20 @@
 {
   "expo": {
-    "name": "Blank Template",
-    "slug": "LogYou",
+    "name": "LogYou",
+    "slug": "log-you",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logyou.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#333333"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -24,7 +23,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.pytommy.logyou",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.pytommy.logyou",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logyou-adaptive.png",
+        "backgroundColor": "#333333"
+      },
+      "permissions": []
     }
   }
 }
