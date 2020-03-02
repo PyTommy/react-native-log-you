@@ -16,10 +16,10 @@ Technologies used are
   <li>React Native with Expo</li>
   <li>React Hooks</li>
   <li>Expo</li>
-  <li>SQLite</li>
+  <li>SQLite (local storage)</li>
  </ul>
 
-You can this application on [Google Play](https://www.google.com).
+You can download this application on [Google Play](https://play.google.com/store/apps/details?id=com.pytommy.logyou).
 (I did not uploaded on App Store because I do not have Mac)
 <br/>
 <div>
