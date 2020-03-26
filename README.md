@@ -10,9 +10,7 @@ v1.0.0では、食事・瞑想・運動・勉強の4項目の時間を計測で�
 
 ## 作成の動機
 作成の動機は2つあり、一つ目がReact Nativeを使ってモバイルアプリケーションをリリースしてみたかったからです。<br>
-もう一つが、自分の活動時間を計測・記録したかったからです。私は、勉強するときにストップウォッチを使って勉強時間を計測し、手書きでノートに毎回記録をしていました。<br>
-写真<br>
-ただ、記録・閲覧を手書きノートを使って行うのは面倒であると感じ、自分で時間を計測するアプリを作ってみようと思いました。
+もう一つが、自分の活動時間を計測・記録したかったからです。私は、勉強するときにストップウォッチを使って勉強時間を計測し、手書きでノートに毎回記録をしていました。ただ、記録・閲覧を手書きノートを使って行うのは面倒であると感じ、自分で時間を計測するアプリを作ってみようと思いました。
 
 ## 使用技術
 - React 16
@@ -28,11 +26,13 @@ v1.0.0では、食事・瞑想・運動・勉強の4項目の時間を計測で�
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image1.png" alt="demo-image-1" width="200px">
   この画面では、活動時間を計り、記録または棄却することができます。
   画面中部のカテゴリー別の時間には、その日にその活動に費やした時間の類型が表示されています。
+<br><br>
 
 #### 特定の日の活動時間要約表示
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image2.png" alt="demo-image-2" width="200px">
   この画面では、特定の日にちのカテゴリー別累計活動時間が表示されています。<br>
   画面最上部にあるbackwardまたはforwardボタンを押すことで、日付を切り替えることができます。
+<br><br>
 
 #### 一日の活動履歴詳細表示
   <div>
@@ -41,12 +41,14 @@ v1.0.0では、食事・瞑想・運動・勉強の4項目の時間を計測で�
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image4.png" alt="demo-image-5" width="200px">
   </div>
   この画面では、特定の日の活動時間詳細を見たり、記録を削除することができます。
+<br><br>
 
 #### 特定カテゴリーの記録閲覧
   &nbsp;
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image5.png" width="200px"/>
   <br>この画面では、例えば、「勉強」の時間が日にちごとに表示されます。
   また、無限スクロールが可能であり、スムーズに過去の記録を閲覧することが可能です。
+<br><br>
 
 #### 設定
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image3.png" width="200px"/>
@@ -58,9 +60,9 @@ v1.0.0では、食事・瞑想・運動・勉強の4項目の時間を計測で�
 
 AutoStopを30分と設定すると、時間を計測し始めて30分後にストップウオッチが自動的に停止し、時間が保存されます。
 MinTimeを1分に設定すると、ストップウオッチの経過時間1分以内だと、記録が保存されないようになります。
+<br><br>
 
-
-## データに関して
+## データ情報
 #### SQL
 ```sql
 CREATE TABLE IF NOT EXISTS logs (
@@ -130,11 +132,15 @@ CREATE TABLE IF NOT EXISTS logs (
 
 ## 課題点
 ### 通信機能がない
-短期間でReact Nativeを作成することにフォーカスしていたため、REST APIを作って、オンライン上にもデータを保存していおくということは行っていません。
+短期間でReact Nativeを作成することにフォーカスしていたため、REST APIを作って、オンライン上にもデータを保存できるようにはしていません。
 今後、このアプリを改善していく予定はありませんが、もし、LogYouのweb版を作成することになったら、APIの作成やそれに応じたmobile版の改善を行っていこうと思います。
+<br><br>
 
 ### マルチディバイスに対応していない
-iPhone6とAndroid Studioを用いて、クロスプラットフォームのアプリケーションに仕上げました。しかし、画面サイズの違いには対応しきれておらず、知人にかりたAndroid端末でGoogle StoreからインストールしたLogYouを使ってみた際には、崩れが生じてしまっているところがありました。
+iPhone6とAndroid Studioを用いて、クロスプラットフォームのアプリケーションに仕上げました。しかし、画面サイズの違いには対応しきれておらず、知人のAndroid端末でGoogle StoreからインストールしたLogYouを使ってみた際には、ストップウオッチ画面に崩れが生じてしまいました。
+<br>
+<br>
 
 ### App Storeでリリースできていない
-Windowsを使用しているため、App Storeにはリリースしていません。Macbookを購入し、資金と時間に余裕がありましたら、リリースしてみようと思います。
+Windowsを使用しているため、App Storeにはリリースしていません。今後Macbookを購入する場合、資金と時間に余裕があればリリースしてみようと思います。
+<br><br>
