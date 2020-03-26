@@ -35,15 +35,17 @@ v1.0.0では、食事・瞑想・運動・勉強の4項目の時間を計測で�
   画面最上部にあるbackwardまたはforwardボタンを押すことで、日付を切り替えることができます。
 
 #### 一日の活動履歴詳細表示
+  <div>
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image0.png" alt="demo-image-0" width="200px">  
   &nbsp;
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image4.png" alt="demo-image-5" width="200px">
-  このページでは、特定の日の活動時間詳細を見たり、記録を削除することができます。
+  </div>
+  この画面では、特定の日の活動時間詳細を見たり、記録を削除することができます。
 
 #### 特定カテゴリーの記録閲覧
   &nbsp;
   <img src="https://github.com/PyTommy/react-native-log-you/blob/readmeImages/images/image5.png" width="200px"/>
-  この画面では、例えば、「勉強」の時間が日にちごとに表示されます。
+  <br>この画面では、例えば、「勉強」の時間が日にちごとに表示されます。
   また、無限スクロールが可能であり、スムーズに過去の記録を閲覧することが可能です。
 
 #### 設定
@@ -89,17 +91,17 @@ CREATE TABLE IF NOT EXISTS logs (
       {
         id: '1',
         category: 'Study',
-        startAt: 2020-01-01T09:00:00.000Z,
-        stopAt: 2020-01-01T10:00:00.000Z,
-        isoDate: '2020-01-01T15:00:00.000Z',
+        startAt: '2020-01-01T09:00:00.000Z', // instance of Date
+        stopAt: '2020-01-01T10:00:00.000Z', // instance of Date
+        isoDate: '2020-01-01T15:00:00.000Z', // ISO String
         elapsedTime: 3600
       },
       {
         id: '2',
         category: 'Meditation',
-        startAt: 2020-01-01T10:00:00.000Z,
-        stopAt: 2020-01-01T10:30:00.000Z,
-        isoDate: '2020-01-01T15:00:00.000Z',
+        startAt: '2020-01-01T10:00:00.000Z', // instance of Date
+        stopAt: '2020-01-01T10:30:00.000Z', // instance of Date
+        isoDate: '2020-01-01T15:00:00.000Z', // ISO String
         elapsedTime: 1800
       }
     ]
@@ -124,5 +126,15 @@ CREATE TABLE IF NOT EXISTS logs (
     minTime: 0
   }
 }
-
 ```
+
+## 課題点
+### 通信機能がない
+短期間でReact Nativeを作成することにフォーカスしていたため、REST APIを作って、オンライン上にもデータを保存していおくということは行っていません。
+今後、このアプリを改善していく予定はありませんが、もし、LogYouのweb版を作成することになったら、APIの作成やそれに応じたmobile版の改善を行っていこうと思います。
+
+### マルチディバイスに対応していない
+iPhone6とAndroid Studioを用いて、クロスプラットフォームのアプリケーションに仕上げました。しかし、画面サイズの違いには対応しきれておらず、知人にかりたAndroid端末でGoogle StoreからインストールしたLogYouを使ってみた際には、崩れが生じてしまっているところがありました。
+
+### App Storeでリリースできていない
+Windowsを使用しているため、App Storeにはリリースしていません。Macbookを購入し、資金と時間に余裕がありましたら、リリースしてみようと思います。
