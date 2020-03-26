@@ -13,6 +13,7 @@ describe('class Log', () => {
             const log = new Log(id, category, startAt, stopAt, isoDate, elapsedTime);
             expect(!!log).toBe(true);
             expect(log).toEqual({ id, category, startAt, stopAt, isoDate, elapsedTime });
+            console.log(log);
         });
         test('Create class Log with undefined date and elapsedTime', () => {
             const log = new Log(id, category, startAt, stopAt);
@@ -42,5 +43,4 @@ describe('class Log', () => {
             }
         });
     });
-
 });

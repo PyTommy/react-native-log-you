@@ -125,7 +125,7 @@ export const fetchSummaries = (isoDateFrom, isoDateTo) => {
  * Returns promise that fetch summaries from database.
  * If there are no data, returns empty object.
  * @param {string} oldestStoredISODate - 
- * @param {string} isoDateTo - ISO formatted date
+ * @param {string} limit - default: 50
  * @returns {object}
  * Formatted as
  * {
